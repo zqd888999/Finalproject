@@ -115,8 +115,7 @@ public class PolyglotDatabase {
 		mongo_[%=e.database.name%].getCollection("[%=e.name%]");
 		
 	[%}for(r in e.references){
-	var b = manytomany(r,e);
-	if(b){
+	if(r.many =true and r.correspondence.many = true){
 	if(e.database.databasetype.value =0){%]
 		if(!mysql_[%=e.database.name%].TableIsExit("[%=r.name%]_[%=e.name%]")) 
 			mysql_[%=e.database.name%].runSQL("CREATE TABLE [%=r.name%]_[%=e.name%]([%=r.correspondence.name%] int,[%=r.name%] int)");
@@ -262,7 +261,8 @@ public class PolyglotDatabase {
 		return null;
 	}
 	
-	[%}}else{if(r.correspondence.many = true and r.many =true){
+	[%}}else{
+	if(r.correspondence.many = true and r.many =true){
 	if(r.type.database.databasetype.value=0){%]
 	public ArrayList<[%=r.type.name%]> get[%=r.name.ftuc()%]([%=e.name%] element) {
 		ResultSet rs =mysql_[%=r.type.database.name%].findTable("[%=r.name%]_[%=e.name%]");
@@ -416,8 +416,7 @@ public class PolyglotDatabase {
 	[%}%]
 	[%for(e in s.entities){
 		for(r in e.references){
-		var m = manytomany(r,e);
-		if(m){%]
+		if(r.many = true and r.correspondence.many = true){%]
 	public void delete[%=r.name.ftuc()%]([%=e.name%] [%=e.name.toLowerCase()%], [%=r.type.name%] [%=r.type.name.toLowerCase()%]) {
 		[%if(e.database.databasetype.value=0){%]
 		mysql_[%=e.database.name%].runSQL("DELETE FROM [%=r.name%]_[%=e.name%] WHERE [%=r.name%] ="+ [%=e.name.toLowerCase()%].getID() +" and [%=r.correspondence.name%] ="+ [%=r.type.name.toLowerCase()%].getID());			
