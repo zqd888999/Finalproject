@@ -1,29 +1,46 @@
 <?xml version="1.0" encoding="ASCII"?>
 <Schema xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns="polyglotml" xmi:id="_9sXLgGvEEei1994L2u_zvQ">
-  <entities xmi:id="_-fRPIGvEEei1994L2u_zvQ" name="Post" database="_AgYyUGvFEei1994L2u_zvQ">
-    <fields xmi:id="_HIf5UGvGEei1994L2u_zvQ" name="Title" type="String"/>
-    <fields xmi:id="_LJsn0H0zEeiO7apSZkiYzQ" name="Page" type="int"/>
-    <fields xmi:id="_LgQGoH0zEeiO7apSZkiYzQ" name="Price" type="double"/>
-    <references xmi:id="_fo6AoHu3EeiVEKIibWzJUw" name="comments" many="true" type="__LGaYGvEEei1994L2u_zvQ" correspondence="_sMYIQHu3EeiVEKIibWzJUw"/>
-    <references xmi:id="_kBXOoHu3EeiVEKIibWzJUw" name="author" type="_-3logGvEEei1994L2u_zvQ" correspondence="_ineDgHu3EeiVEKIibWzJUw"/>
+  <entities xmi:id="_LzKAkIqREeinA82JCaOAWg" name="Product" database="_Gk7usGvFEei1994L2u_zvQ">
+    <fields xmi:id="_wPvSYIqREeinA82JCaOAWg" name="Product_Name" type="String"/>
+    <fields xmi:id="_5pOxUIqREeinA82JCaOAWg" name="Current_inventory_count" type="int"/>
+    <fields xmi:id="_A9K5AIqSEeinA82JCaOAWg" name="Store_cost" type="double"/>
+    <fields xmi:id="_Dyb18IqSEeinA82JCaOAWg" name="Sale_cost" type="double"/>
+    <fields xmi:id="_GrkmQIqSEeinA82JCaOAWg" name="Last_update_Date" type="Date"/>
+    <fields xmi:id="_UBd3EIqXEeinA82JCaOAWg" name="Updated_by_User" type="String"/>
+    <fields xmi:id="_Y-Wn0IqXEeinA82JCaOAWg" name="Pet_flag" type="String"/>
+    <references xmi:id="_AF8foIqeEeinA82JCaOAWg" name="products" many="true" type="_LzKAkIqREeinA82JCaOAWg" correspondence="_LAW-wIqeEeinA82JCaOAWg"/>
+    <references xmi:id="_LAW-wIqeEeinA82JCaOAWg" name="package" type="_LzKAkIqREeinA82JCaOAWg" correspondence="_AF8foIqeEeinA82JCaOAWg"/>
+    <references xmi:id="__h03MIqjEeinA82JCaOAWg" name="items" many="true" type="_ghepwIqREeinA82JCaOAWg" correspondence="_A8O_sIqkEeinA82JCaOAWg"/>
+    <references xmi:id="_GzCbAIqkEeinA82JCaOAWg" name="logs" many="true" type="_nljwgIqREeinA82JCaOAWg" correspondence="_IMHt0IqkEeinA82JCaOAWg"/>
   </entities>
-  <entities xmi:id="_-3logGvEEei1994L2u_zvQ" name="Author" database="_AgYyUGvFEei1994L2u_zvQ">
-    <fields xmi:id="_qCbdYHuwEeiVEKIibWzJUw" name="name" type="String"/>
-    <fields xmi:id="_OkY8wIaZEeibh8UzPTO4Ag" name="age" type="int"/>
-    <references xmi:id="_ineDgHu3EeiVEKIibWzJUw" name="post" type="_-fRPIGvEEei1994L2u_zvQ" correspondence="_kBXOoHu3EeiVEKIibWzJUw"/>
-    <references xmi:id="_yLW54H4BEeiL-MugLJjKKw" name="fans" many="true" type="_r-mcsH4BEeiL-MugLJjKKw" correspondence="_0jU20H4BEeiL-MugLJjKKw"/>
+  <entities xmi:id="_VW8D8IqREeinA82JCaOAWg" name="Customer" database="_AgYyUGvFEei1994L2u_zvQ">
+    <fields xmi:id="_dYLHwIqXEeinA82JCaOAWg" name="Fisrtname" type="String"/>
+    <fields xmi:id="_gzbGoIqXEeinA82JCaOAWg" name="Lastname" type="String"/>
+    <fields xmi:id="_jSM2MIqXEeinA82JCaOAWg" name="Address" type="String"/>
+    <fields xmi:id="_nHLjsIqXEeinA82JCaOAWg" name="City" type="String"/>
+    <fields xmi:id="_rflHUIqXEeinA82JCaOAWg" name="State" type="String"/>
+    <fields xmi:id="_4OY8QIqXEeinA82JCaOAWg" name="Zip" type="String"/>
+    <references xmi:id="_XBMEoIqkEeinA82JCaOAWg" name="sales" many="true" type="_ajg2gIqREeinA82JCaOAWg" correspondence="_Z8oiEIqkEeinA82JCaOAWg"/>
   </entities>
-  <entities xmi:id="__LGaYGvEEei1994L2u_zvQ" name="Comment" database="_Gk7usGvFEei1994L2u_zvQ">
-    <fields xmi:id="_tBVegHuwEeiVEKIibWzJUw" name="title" type="String"/>
-    <fields xmi:id="_vPtakHuwEeiVEKIibWzJUw" name="body" type="String"/>
-    <references xmi:id="_sMYIQHu3EeiVEKIibWzJUw" name="post" type="_-fRPIGvEEei1994L2u_zvQ" correspondence="_fo6AoHu3EeiVEKIibWzJUw"/>
-    <references xmi:id="_t8wgwHu3EeiVEKIibWzJUw" name="replies" many="true" type="__LGaYGvEEei1994L2u_zvQ" correspondence="_cCjvkHu4EeiVEKIibWzJUw"/>
-    <references xmi:id="_cCjvkHu4EeiVEKIibWzJUw" name="replyto" type="__LGaYGvEEei1994L2u_zvQ" correspondence="_t8wgwHu3EeiVEKIibWzJUw"/>
+  <entities xmi:id="_ajg2gIqREeinA82JCaOAWg" name="Customer_sale" database="_AgYyUGvFEei1994L2u_zvQ">
+    <fields xmi:id="_4VTDQIqcEeinA82JCaOAWg" name="Cust_ID" type="int"/>
+    <fields xmi:id="_-dja8IqcEeinA82JCaOAWg" name="Total_item_amount" type="int"/>
+    <fields xmi:id="_GvXgIIqdEeinA82JCaOAWg" name="Tax_amount" type="int"/>
+    <fields xmi:id="_MRUFwIqdEeinA82JCaOAWg" name="sales_date" type="Date"/>
+    <fields xmi:id="_PCkscIqdEeinA82JCaOAWg" name="Shipping_Handling_fee" type="double"/>
+    <references xmi:id="_Z8oiEIqkEeinA82JCaOAWg" name="customer" type="_VW8D8IqREeinA82JCaOAWg" correspondence="_XBMEoIqkEeinA82JCaOAWg"/>
+    <references xmi:id="_d_bpIIqkEeinA82JCaOAWg" name="items" many="true" type="_ghepwIqREeinA82JCaOAWg" correspondence="_e8fHQIqkEeinA82JCaOAWg"/>
   </entities>
-  <entities xmi:id="_r-mcsH4BEeiL-MugLJjKKw" name="Fan" database="_AgYyUGvFEei1994L2u_zvQ">
-    <fields xmi:id="_vsayQH4BEeiL-MugLJjKKw" name="name" type="String"/>
-    <fields xmi:id="_ReCqcIaZEeibh8UzPTO4Ag" name="age" type="int"/>
-    <references xmi:id="_0jU20H4BEeiL-MugLJjKKw" name="idol" many="true" type="_-3logGvEEei1994L2u_zvQ" correspondence="_yLW54H4BEeiL-MugLJjKKw"/>
+  <entities xmi:id="_ghepwIqREeinA82JCaOAWg" name="Sales_item" database="_AgYyUGvFEei1994L2u_zvQ">
+    <fields xmi:id="_Yuhp0IqcEeinA82JCaOAWg" name="sale_amount" type="int"/>
+    <references xmi:id="_A8O_sIqkEeinA82JCaOAWg" name="product" type="_LzKAkIqREeinA82JCaOAWg" correspondence="__h03MIqjEeinA82JCaOAWg"/>
+    <references xmi:id="_e8fHQIqkEeinA82JCaOAWg" name="customer_sales" type="_ajg2gIqREeinA82JCaOAWg" correspondence="_d_bpIIqkEeinA82JCaOAWg"/>
+  </entities>
+  <entities xmi:id="_nljwgIqREeinA82JCaOAWg" name="Pet_care_log" database="_Gk7usGvFEei1994L2u_zvQ">
+    <fields xmi:id="_n6k9QIqcEeinA82JCaOAWg" name="created_by_user" type="String"/>
+    <fields xmi:id="_oJ8O8IqcEeinA82JCaOAWg" name="Log_test" type="String"/>
+    <fields xmi:id="_obYkQIqcEeinA82JCaOAWg" name="Last_update_DateTime" type="Date"/>
+    <references xmi:id="_IMHt0IqkEeinA82JCaOAWg" name="product" type="_LzKAkIqREeinA82JCaOAWg" correspondence="_GzCbAIqkEeinA82JCaOAWg"/>
   </entities>
   <databases xmi:id="_AgYyUGvFEei1994L2u_zvQ" type="Mysql" name="test" host="localhost" port="3306" user="root" password=""/>
   <databases xmi:id="_Gk7usGvFEei1994L2u_zvQ" databasetype="Document" type="MongoDB" name="newtest" host="localhost" port="27017"/>

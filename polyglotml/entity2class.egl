@@ -1,6 +1,10 @@
 package schema;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class [%=e.name%]{
 	
@@ -94,39 +98,6 @@ public class [%=e.name%]{
 		return db.get[%=r.name.ftuc()%](this);
 	}
 	
-	[%find = loopReference(e,r);
-	if(find){%]
-	public ArrayList<[%=r.type.name%]> getAll[%=r.name.ftuc()%](){
-		ArrayList<[%=r.type.name%]> all = (ArrayList<[%=r.type.name%]>) get[%=r.name.ftuc()%]().clone(); 
-		[%for(r1 in r.type.references){
-		if(r.type.name = e.name and (r1.many = true and r1.correspondence.many = false)){%]
-		for([%=r.type.name%] member :get[%=r1.name.ftuc()%]()) {
-			if(member.get[%=r.name.ftuc()%]().size()!=0) {
-				ArrayList<[%=r.type.name%]> allchild = member.getAll[%=r.name.ftuc()%]();
-				if(allchild.size()>0)
-					all.addAll(allchild);
-			}
-		}
-
-		[%}}%]
-		return all;
-	}
-	
-	[%}if(r.type.fields.size>0){
-	if(find){%]
-	public [%=r.type.name%] Find[%=r.name%]([%=r.type.fields[0].type%] [%=r.type.fields[0].name.toLowerCase()%]) {
-		for([%=r.type.name%] element: getAll[%=r.name.ftuc()%]()) {
-			[%if(r.type.fields[0].type="String"){%]
-			if(element.get[%=r.type.fields[0].name.ftuc()%]().equals([%=r.type.fields[0].name.toLowerCase()%]))
-			[%}else{%]	
-			if(element.get[%=r.type.fields[0].name.ftuc()%]()==[%=r.type.fields[0].name.toLowerCase()%])
-			[%}%]
-				return element;
-		}
-		return null;
-	}
-	
-	[%}else{%]
 	public [%=r.type.name%] Find[%=r.name%]([%=r.type.fields[0].type%] [%=r.type.fields[0].name.toLowerCase()%]) {
 		for([%=r.type.name%] element: get[%=r.name.ftuc()%]()) {
 			[%if(r.type.fields[0].type="String"){%]
@@ -139,7 +110,7 @@ public class [%=e.name%]{
 		return null;
 	}
 
-	[%}}}}}%]
+	[%}}}%]
 	[%for (f in e.fields) { %]
 	public [%=f.type%] get[%=f.name.ftuc()%]() {
 		[%if(f.type= "int"){%]
@@ -148,6 +119,16 @@ public class [%=e.name%]{
 		return Double.valueOf(db.get(this,"[%=f.name%]"));
 		[%}if(f.type= "String"){%]
 		return db.get(this,"[%=f.name%]");
+		[%}if(f.type= "Date"){%]
+		Date date = null;    
+		String str = db.get(this,"[%=f.name%]");
+		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");      
+		try {    
+           date = format1.parse(str);   
+		} catch (ParseException e) {    
+           e.printStackTrace();    
+		}   
+		return date;
 		[%}%]
 	}
 	

@@ -9,6 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.bson.Document;
 import com.mongodb.MongoClient;
@@ -152,6 +155,10 @@ public class PolyglotDatabase {
 		else {
 			if(value.getClass().getSimpleName().equals("String"))
 				mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = '"+value+"' WHERE id = "+[%=e.name.toLowerCase()%].getID());
+			if(value.getClass().getSimpleName().equals("Date")){
+				java.sql.Date sqlDate = new java.sql.Date(((Date) value).getTime());
+				mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = '"+ sqlDate +"' WHERE id = "+[%=e.name.toLowerCase()%].getID());
+			}
 			else
 				mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = "+value+" WHERE id = "+[%=e.name.toLowerCase()%].getID());
 			}
@@ -197,8 +204,15 @@ public class PolyglotDatabase {
 		MongoCollection<Document> [%=e.name.toLowerCase()%]s = mongo_[%=e.database.name%].getCollection("[%=e.name%]");
 		FindIterable<Document> documents = [%=e.name.toLowerCase()%]s.find();
 		for (Document document : documents) {
-		    if(document.getInteger("id")==[%=e.name.toLowerCase()%].getID())
-		    	return document.get(name).toString();
+		    if(document.getInteger("id")==[%=e.name.toLowerCase()%].getID()){
+		    	if(document.get(name).getClass().getSimpleName().equals("Date")){
+		    		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+					return format1.format(document.get(name));   
+		    	}
+		    	else
+		    		return document.get(name).toString();
+		    }
+		    	
 		}
 		return null;
 	}
@@ -350,9 +364,11 @@ public class PolyglotDatabase {
 			while(rs.next())
 			{	
 			[%if(e.fields[0].type="String"){%]
-				if(rs.get[%=e.fields[0].type%]("[%=e.fields[0].name%]").equals([%=e.fields[0].name.toLowerCase()%]))
-			[%}else{%]
-				if(rs.get[%=e.fields[0].type%]("[%=e.fields[0].name%]")==[%=e.fields[0].name.toLowerCase()%])
+				if(rs.getString("[%=e.fields[0].name%]").equals([%=e.fields[0].name.toLowerCase()%]))
+			[%}if(e.fields[0].type="int"){%]
+				if(rs.getInt("[%=e.fields[0].name%]")==[%=e.fields[0].name.toLowerCase()%])
+			[%}if(e.fields[0].type="double"){%]
+				if(rs.getDouble("[%=e.fields[0].name%]")==[%=e.fields[0].name.toLowerCase()%])
 			[%}%]	
 				{
 					[%=e.name%] [%=e.name.toLowerCase()%] =new [%=e.name%](this);
@@ -438,6 +454,8 @@ public class PolyglotDatabase {
 			return "int";
 		if(s="double")
 			return "double";
+		if(s = "Date")
+		 	return "Date";
 		else
 		  	return "i don't have this type yet";
 	}
