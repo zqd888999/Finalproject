@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
@@ -17,21 +18,57 @@ import schema.Post;
 public class Databasetest {
 
 	protected PolyglotDatabase db;
+	protected Post p;
+	protected Author a;
+	protected Author a1;
+	protected Fan f;
+	protected Fan f1;
+	protected Comment c1;
+	protected Comment c2;
+	protected Comment c3;
+	protected Comment c4;
+	protected Comment c5;
 	
 	
 	@Before
 	public void setUp() throws Exception {
-		 db = new PolyglotDatabase();
+		db = new PolyglotDatabase();
+		p = db.createPost();
+		p.setTitle("i am ok");
+		p.setPage(1);
+		p.setPrice(1.2);
+		a = db.createAuthor();
+		a1 = db.createAuthor();
+		a.setName("dong");
+		a.setAge(23);
+		a1.setName("frank");
+		a1.setAge(24);
+		f = db.createFan();
+		f1 = db.createFan();
+		f.setName("jack");
+		f.setAge(14);
+		f1.setName("mary");
+		f1.setAge(18);
+		c1 = db.createComment();
+		c2 = db.createComment();
+		c3 = db.createComment();
+		c4 = db.createComment();
+		c5 = db.createComment();
+		c1.setTitle("11");
+		c2.setTitle("12");
+		c3.setTitle("13");
+		c4.setTitle("14");
+		c5.setTitle("15");
+		c1.setBody("i am 11");
+		c2.setBody("i am 12");
+		c3.setBody("i am 13");
+		c4.setBody("i am 14");
+		c5.setBody("i am 15");
 	}
 	
 	
 	@Test
 	public void Test1_PostGetandSet() {
-		Post p = db.createPost();
-		p.setTitle("i am ok");
-		p.setPage(1);
-		p.setPrice(1.2);
-		
 		assertEquals("i am ok", p.getTitle());
 		assertEquals(1,p.getPage());
 		assertEquals(1.2,p.getPrice(),1e-5);
@@ -43,29 +80,14 @@ public class Databasetest {
 	
 	@Test
 	public void Test2_AuthorGetandSet(){
-		Author a = db.createAuthor();
-		Author a1 = db.createAuthor();
-		a.setName("dong");
-		a.setAge(23);
-		a1.setName("frank");
-		a1.setAge(24);
-		
 		assertEquals("dong", a.getName());
 		assertEquals(23,a.getAge());
 		assertEquals("frank",a1.getName());
 		assertEquals(24,a1.getAge());
-		
 	}
 	
 	@Test
 	public void Test3_GetandSetFan(){
-		Fan f = db.createFan();
-		Fan f1 = db.createFan();
-		f.setName("jack");
-		f.setAge(14);
-		f1.setName("mary");
-		f1.setAge(18);
-		
 		assertEquals("jack", f.getName());
 		assertEquals(14,f.getAge());
 		assertEquals("mary",f1.getName());
@@ -74,22 +96,6 @@ public class Databasetest {
 	
 	@Test
 	public void Test4_CommentGetandSet(){
-		Comment c1 = db.createComment();
-		Comment c2 = db.createComment();
-		Comment c3 = db.createComment();
-		Comment c4 = db.createComment();
-		Comment c5 = db.createComment();
-		c1.setTitle("11");
-		c2.setTitle("12");
-		c3.setTitle("13");
-		c4.setTitle("14");
-		c5.setTitle("15");
-		c1.setBody("i am 11");
-		c2.setBody("i am 12");
-		c3.setBody("i am 13");
-		c4.setBody("i am 14");
-		c5.setBody("i am 15");
-		
 		assertEquals("11", c1.getTitle());
 		assertEquals("12", c2.getTitle());
 		assertEquals("13", c3.getTitle());
@@ -104,36 +110,25 @@ public class Databasetest {
 	
 	@Test
 	public void Test5_Find(){
-		Post p = db.findPostByTitle("i am ok");
-		assertEquals("i am ok", p.getTitle());
-		assertEquals(2,p.getPage());
-		assertEquals(1.2,p.getPrice(),1e-5);
+		Post p2 = db.findPostByTitle("i am ok");
+		assertEquals("i am ok", p2.getTitle());
+		assertEquals(1,p2.getPage());
+		assertEquals(1.2,p2.getPrice(),1e-5);
 		
-		Author a = db.findAuthorByName("dong");
-		assertEquals("dong", a.getName());
-		assertEquals(23,a.getAge());
+		Author a2 = db.findAuthorByName("dong");
+		assertEquals("dong", a2.getName());
+		assertEquals(23,a2.getAge());
 		
-		Fan f = db.findFanByName("jack");
-		assertEquals("jack", f.getName());
-		assertEquals(14,f.getAge());
+		Fan f2 = db.findFanByName("jack");
+		assertEquals("jack", f2.getName());
+		assertEquals(14,f2.getAge());
 		
-		Comment c = db.findCommentByTitle("11");
-		assertEquals("i am 11", c.getBody());
+		Comment c6 = db.findCommentByTitle("11");
+		assertEquals("i am 11", c6.getBody());
 	}
 	
 	@Test
-	public void Test6_setReference(){
-		Post p = db.findPostByTitle("i am ok");
-		Author a = db.findAuthorByName("dong");
-		Author a1 = db.findAuthorByName("frank");
-		Fan f = db.findFanByName("jack");
-		Fan f1 = db.findFanByName("mary");
-		Comment c1 = db.findCommentByTitle("11");
-		Comment c2 = db.findCommentByTitle("12");
-		Comment c3 = db.findCommentByTitle("13");
-		Comment c4 = db.findCommentByTitle("14");
-		Comment c5 = db.findCommentByTitle("15");
-		
+	public void Test6_setReference(){	
 		p.setAuthor(a);
 		assertEquals("dong", p.getAuthor().getName());
 		assertEquals("i am ok", a.getPost().getTitle());
@@ -168,30 +163,15 @@ public class Databasetest {
 		a.setPost(p);
 		assertEquals("dong", p.getAuthor().getName());
 		assertEquals("i am ok", a.getPost().getTitle());
-	}
-	
-	@Test
-	public void Test7_Delete(){
-		Post p = db.findPostByTitle("i am ok");
-		Author a = db.findAuthorByName("dong");
-		Author a1 = db.findAuthorByName("frank");
-		Fan f = db.findFanByName("jack");
-		Fan f1 = db.findFanByName("mary");
-		Comment c1 = db.findCommentByTitle("11");
-		Comment c2 = db.findCommentByTitle("12");
-		Comment c3 = db.findCommentByTitle("13");
-		Comment c4 = db.findCommentByTitle("14");
-		Comment c5 = db.findCommentByTitle("15");
 		
 		f.deleteIdol(a);
 		assertEquals(1,f.getIdol().size());
-		
+	}
+	
+	@After
+	public void Delete(){
 		db.deletePost(p);
-		assertEquals(null,db.get(a, "post"));
-		
-		db.deleteAuthor(a);
-		assertEquals(0,f1.getIdol().size());
-		
+		db.deleteAuthor(a);		
 		db.deleteAuthor(a1);
 		db.deleteFan(f);
 		db.deleteFan(f1);
