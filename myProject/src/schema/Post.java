@@ -1,29 +1,33 @@
 package schema;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class Post{
 	
-	protected int id;
+	private int id;
 	protected PolyglotDatabase db;
 	
 	public Post(PolyglotDatabase db){
 		this.db = db;
 	}
 	
-	public void setID(int id) {
+	public void setDatabaseID(int id) {
 		this.id=id;
 		
 	}
 	
-	public int getID() {
+	public int getDatabaseID() {
 		return id;
 	}
 	
 	public void addComments(Comment element){
 		boolean exist = false;
 		for(Comment member: getComments())
-			if(member.getID()==element.getID())
+			if(member.getDatabaseID()==element.getDatabaseID())
 				exist =true;
 		if(!exist)
 			element.setPost(this);
@@ -47,13 +51,13 @@ public class Post{
 	
 	public void setAuthor(Author element){
 		if(this.getAuthor()==null) {
-			db.set(this, "author", element.getID());
+			db.set(this, "author", element.getDatabaseID());
 			element.setPost(this);
 		}
 		else{
-			if(this.getAuthor().getID()!=element.getID()) {
+			if(this.getAuthor().getDatabaseID()!=element.getDatabaseID()) {
 				db.set(this.getAuthor(), "Post", null);
-				db.set(this, "author", element.getID());
+				db.set(this, "author", element.getDatabaseID());
 				element.setPost(this);
 			}
 		}

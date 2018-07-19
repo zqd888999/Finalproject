@@ -1,22 +1,26 @@
 package schema;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class Comment{
 	
-	protected int id;
+	private int id;
 	protected PolyglotDatabase db;
 	
 	public Comment(PolyglotDatabase db){
 		this.db = db;
 	}
 	
-	public void setID(int id) {
+	public void setDatabaseID(int id) {
 		this.id=id;
 		
 	}
 	
-	public int getID() {
+	public int getDatabaseID() {
 		return id;
 	}
 	
@@ -25,13 +29,13 @@ public class Comment{
 	}
 	
 	public void setPost(Post element){
-		db.set(this, "post", element.getID());
+		db.set(this, "post", element.getDatabaseID());
 	}
 	
 	public void addReplies(Comment element){
 		boolean exist = false;
 		for(Comment member: getReplies())
-			if(member.getID()==element.getID())
+			if(member.getDatabaseID()==element.getDatabaseID())
 				exist =true;
 		if(!exist)
 			element.setReplyto(this);
@@ -41,33 +45,20 @@ public class Comment{
 		return db.getReplies(this);
 	}
 	
-	public ArrayList<Comment> getAllReplies(){
-		ArrayList<Comment> all = (ArrayList<Comment>) getReplies().clone(); 
-		for(Comment member :getReplies()) {
-			if(member.getReplies().size()!=0) {
-				ArrayList<Comment> allchild = member.getAllReplies();
-				if(allchild.size()>0)
-					all.addAll(allchild);
-			}
-		}
-
-		return all;
-	}
-	
 	public Comment Findreplies(String title) {
-		for(Comment element: getAllReplies()) {
+		for(Comment element: getReplies()) {
 			if(element.getTitle().equals(title))
 				return element;
 		}
 		return null;
 	}
-	
+
 	public Comment getReplyto(){
 		return db.getreplyto(this);
 	}
 	
 	public void setReplyto(Comment element){
-		db.set(this, "replyto", element.getID());
+		db.set(this, "replyto", element.getDatabaseID());
 	}
 	
 	public String getTitle() {

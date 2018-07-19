@@ -110,7 +110,7 @@ public class PolyglotDatabase {
 	[%for(e in s.entities){
 	if(e.database.databasetype.value =0){%]
 		if(!mysql_[%=e.database.name%].TableIsExit("[%=e.name%]")) 
-			mysql_[%=e.database.name%].runSQL("CREATE TABLE [%=e.name%](id int[%for (f in e.fields) 
+			mysql_[%=e.database.name%].runSQL("CREATE TABLE [%=e.name%](databaseid int[%for (f in e.fields) 
 		{%],[%=f.name%] [%=my(f.type)%][%}
 		for(r in e.references){if(r.many =false){%],[%=r.name%] int[%}}%])");
 		
@@ -136,11 +136,11 @@ public class PolyglotDatabase {
 		int id =0;
 		try {
 			while(rs.next())
-				id=rs.getInt("id");
+				id=rs.getInt("databaseid");
 			id++;
 			[%=e.name%] [%=e.name.toLowerCase()%] = new [%=e.name%](this);
-			[%=e.name.toLowerCase()%].setID(id);
-			mysql_[%=e.database.name%].runSQL("INSERT INTO [%=e.name%](id) VALUES("+id+")");
+			[%=e.name.toLowerCase()%].setDatabaseID(id);
+			mysql_[%=e.database.name%].runSQL("INSERT INTO [%=e.name%](databaseid) VALUES("+id+")");
 			return [%=e.name.toLowerCase()%];
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -151,17 +151,17 @@ public class PolyglotDatabase {
 	
 	public void set([%=e.name%] [%=e.name.toLowerCase()%], String name, Object value) {
 		if(value ==null)
-			mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = null WHERE id = "+[%=e.name.toLowerCase()%].getID());
+			mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = null WHERE databaseid = "+[%=e.name.toLowerCase()%].getDatabaseID());
 		else {
 			if(value.getClass().getSimpleName().equals("String"))
-				mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = '"+value+"' WHERE id = "+[%=e.name.toLowerCase()%].getID());
+				mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = '"+value+"' WHERE databaseid = "+[%=e.name.toLowerCase()%].getDatabaseID());
 			if(value.getClass().getSimpleName().equals("Date")){
 				java.sql.Date sqlDate = new java.sql.Date(((Date) value).getTime());
-				mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = '"+ sqlDate +"' WHERE id = "+[%=e.name.toLowerCase()%].getID());
+				mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = '"+ sqlDate +"' WHERE databaseid = "+[%=e.name.toLowerCase()%].getDatabaseID());
 			}
-			else
-				mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = "+value+" WHERE id = "+[%=e.name.toLowerCase()%].getID());
-			}
+			if(value.getClass().getSimpleName().equals("Integer") || value.getClass().getSimpleName().equals("Double"))
+				mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = "+value+" WHERE databaseid = "+[%=e.name.toLowerCase()%].getDatabaseID());
+		}
 	}
 	
 	public String get([%=e.name%] [%=e.name.toLowerCase()%], String name) {
@@ -169,7 +169,7 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("id")==[%=e.name.toLowerCase()%].getID())
+				if(rs.getInt("databaseid")==[%=e.name.toLowerCase()%].getDatabaseID())
 					return rs.getString(name);
 			}
 		} catch (SQLException e) {
@@ -185,26 +185,26 @@ public class PolyglotDatabase {
 		FindIterable<Document> documents = [%=e.name.toLowerCase()%]s.find();
 		int id =0;
 		for (Document document : documents) 
-		   id = document.getInteger("id");
+		   id = document.getInteger("databaseid");
 		id++;
 		[%=e.name%] [%=e.name.toLowerCase()%] = new [%=e.name%](this);
-		[%=e.name.toLowerCase()%].setID(id);
+		[%=e.name.toLowerCase()%].setDatabaseID(id);
 		Document doc = new Document();
-	    doc.put("id", id);
+	    doc.put("databaseid", id);
 	    [%=e.name.toLowerCase()%]s.insertOne(doc);
 		return [%=e.name.toLowerCase()%];
 	}
 	
 	public void set([%=e.name%] [%=e.name.toLowerCase()%], String name, Object value) {
 		MongoCollection<Document> [%=e.name.toLowerCase()%]s = mongo_[%=e.database.name%].getCollection("[%=e.name%]");
-		[%=e.name.toLowerCase()%]s.updateOne(Filters.eq("id", [%=e.name.toLowerCase()%].getID()), new Document("$set",new Document(name,value)));	
+		[%=e.name.toLowerCase()%]s.updateOne(Filters.eq("databaseid", [%=e.name.toLowerCase()%].getDatabaseID()), new Document("$set",new Document(name,value)));	
 	}
 	
 	public String get([%=e.name%] [%=e.name.toLowerCase()%], String name) {
 		MongoCollection<Document> [%=e.name.toLowerCase()%]s = mongo_[%=e.database.name%].getCollection("[%=e.name%]");
 		FindIterable<Document> documents = [%=e.name.toLowerCase()%]s.find();
 		for (Document document : documents) {
-		    if(document.getInteger("id")==[%=e.name.toLowerCase()%].getID()){
+		    if(document.getInteger("databaseid")==[%=e.name.toLowerCase()%].getDatabaseID()){
 		    	if(document.get(name).getClass().getSimpleName().equals("Date")){
 		    		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 					return format1.format(document.get(name));   
@@ -223,15 +223,15 @@ public class PolyglotDatabase {
 		if(r.correspondence.many = true and r.many =true){
 		if(e.database.databasetype.value =0){%]
 	public void set[%=r.name.ftuc()%]([%=e.name%] [%=e.name.toLowerCase()%],[%=r.type.name%] [%=r.type.name.toLowerCase()%]){
-		mysql_[%=e.database.name%].runSQL("INSERT INTO [%=r.name%]_[%=e.name%]([%=r.correspondence.name%] ,[%=r.name%] ) VALUES("+[%=e.name.toLowerCase()%].getID()+","+[%=r.type.name.toLowerCase()%].getID()+")");
+		mysql_[%=e.database.name%].runSQL("INSERT INTO [%=r.name%]_[%=e.name%]([%=r.correspondence.name%] ,[%=r.name%] ) VALUES("+[%=e.name.toLowerCase()%].getDatabaseID()+","+[%=r.type.name.toLowerCase()%].getDatabaseID()+")");
 	}
 		
 	[%}if(e.database.databasetype.value =2){%]
 	public void set[%=r.name.ftuc()%]([%=e.name%] [%=e.name.toLowerCase()%],[%=r.type.name%] [%=r.type.name.toLowerCase()%]){
 		MongoCollection<Document> table = mongo_[%=e.database.name%].getCollection("[%=r.name%]_[%=e.name%]");
 		Document doc = new Document();
-	    doc.put("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getID());
-	    doc.put("[%=r.name%]", [%=r.type.name.toLowerCase()%].getID());
+	    doc.put("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getDatabaseID());
+	    doc.put("[%=r.name%]", [%=r.type.name.toLowerCase()%].getDatabaseID());
 		table.insertOne(doc);
 	}
 	
@@ -245,10 +245,10 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("id")==element.getID())
+				if(rs.getInt("databaseid")==element.getDatabaseID())
 				{
 					[%=r.type.name%] [%=r.type.name.toLowerCase()%] =new [%=r.type.name%](this);
-					[%=r.type.name.toLowerCase()%].setID(rs.getInt("[%=r.name%]"));
+					[%=r.type.name.toLowerCase()%].setDatabaseID(rs.getInt("[%=r.name%]"));
 					return [%=r.type.name.toLowerCase()%];
 				}
 			}
@@ -264,10 +264,10 @@ public class PolyglotDatabase {
 		MongoCollection<Document> table = mongo_[%=e.database.name%].getCollection("[%=e.name%]");
 		FindIterable<Document> documents = table.find();
 		for (Document document : documents) {
-		    if(document.getInteger("id")==element.getID()) {
+		    if(document.getInteger("databaseid")==element.getDatabaseID()) {
 		    	if(document.getInteger("[%=r.name%]")!=null) {
 		    	[%=r.type.name%]  [%=r.type.name.toLowerCase()%] = new [%=r.type.name%](this);
-		    	[%=r.type.name.toLowerCase()%].setID(document.getInteger("[%=r.name%]"));
+		    	[%=r.type.name.toLowerCase()%].setDatabaseID(document.getInteger("[%=r.name%]"));
 		    	return [%=r.type.name.toLowerCase()%];
 		    	}
 		    }
@@ -284,10 +284,10 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("[%=r.correspondence.name%]")==element.getID())
+				if(rs.getInt("[%=r.correspondence.name%]")==element.getDatabaseID())
 				{
 					[%=r.type.name%] [%=r.type.name.toLowerCase()%] =new [%=r.type.name%](this);
-					[%=r.type.name.toLowerCase()%].setID(rs.getInt("[%=r.name%]"));
+					[%=r.type.name.toLowerCase()%].setDatabaseID(rs.getInt("[%=r.name%]"));
 					[%=r.type.name.toLowerCase()%]s.add([%=r.type.name.toLowerCase()%]);
 				}
 			}
@@ -305,9 +305,9 @@ public class PolyglotDatabase {
 		MongoCollection<Document> table = mongo_[%=r.type.database.name%].getCollection("[%=r.name%]_[%=e.name%]");
 		FindIterable<Document> documents = table.find();
 		for (Document document : documents) { 
-		   	if(document.getInteger("[%=r.correspondence.name%]")==element.getID()) {
+		   	if(document.getInteger("[%=r.correspondence.name%]")==element.getDatabaseID()) {
 		    	[%=r.type.name%] [%=r.type.name.toLowerCase()%] = new [%=r.type.name%](this);
-		    	[%=r.type.name.toLowerCase()%].setID(document.getInteger("[%=r.name%]"));
+		    	[%=r.type.name.toLowerCase()%].setDatabaseID(document.getInteger("[%=r.name%]"));
 		    	[%=r.type.name.toLowerCase()%]s.add([%=r.type.name.toLowerCase()%]);
 		   	} 
 		}
@@ -322,10 +322,10 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("[%=r.correspondence.name%]")==element.getID()) 
+				if(rs.getInt("[%=r.correspondence.name%]")==element.getDatabaseID()) 
 				{
 					[%=r.type.name%] [%=r.type.name.toLowerCase()%] =new [%=r.type.name%](this);
-					[%=r.type.name.toLowerCase()%].setID(rs.getInt("id"));
+					[%=r.type.name.toLowerCase()%].setDatabaseID(rs.getInt("databaseid"));
 					[%=r.type.name.toLowerCase()%]s.add([%=r.type.name.toLowerCase()%]);
 				}
 			}
@@ -344,9 +344,9 @@ public class PolyglotDatabase {
 		FindIterable<Document> documents = table.find();
 		for (Document document : documents) {
 		    if(document.getInteger("[%=r.correspondence.name%]")!=null) {
-		    	if(document.getInteger("[%=r.correspondence.name%]")==element.getID()) {
+		    	if(document.getInteger("[%=r.correspondence.name%]")==element.getDatabaseID()) {
 		    	[%=r.type.name%] [%=r.type.name.toLowerCase()%] = new [%=r.type.name%](this);
-		    	[%=r.type.name.toLowerCase()%].setID(document.getInteger("id"));
+		    	[%=r.type.name.toLowerCase()%].setDatabaseID(document.getInteger("databaseid"));
 		    	[%=r.type.name.toLowerCase()%]s.add([%=r.type.name.toLowerCase()%]);
 		    	}
 		    }
@@ -372,7 +372,7 @@ public class PolyglotDatabase {
 			[%}%]	
 				{
 					[%=e.name%] [%=e.name.toLowerCase()%] =new [%=e.name%](this);
-					[%=e.name.toLowerCase()%].setID(rs.getInt("id"));
+					[%=e.name.toLowerCase()%].setDatabaseID(rs.getInt("databaseid"));
 					return [%=e.name.toLowerCase()%];
 				}
 			}
@@ -388,7 +388,7 @@ public class PolyglotDatabase {
 		for (Document document : documents) {
 		if(document.get("[%=e.fields[0].name%]").equals([%=e.fields[0].name.toLowerCase()%])) {
 		    	[%=e.name%] [%=e.name.toLowerCase()%] =new [%=e.name%](this);
-		    	[%=e.name.toLowerCase()%].setID(document.getInteger("id"));
+		    	[%=e.name.toLowerCase()%].setDatabaseID(document.getInteger("databaseid"));
 		    	return [%=e.name.toLowerCase()%];
 		    }
 		}
@@ -410,21 +410,21 @@ public class PolyglotDatabase {
 			}
 		[%}if(r.many = true and r.correspondence.many = true){
 		if(e.database.databasetype.value=0){%]
-			mysql_[%=e.database.name%].runSQL("DELETE FROM [%=r.name%]_[%=e.name%] WHERE [%=r.correspondence.name%] ="+ [%=e.name.toLowerCase()%].getID());
+			mysql_[%=e.database.name%].runSQL("DELETE FROM [%=r.name%]_[%=e.name%] WHERE [%=r.correspondence.name%] ="+ [%=e.name.toLowerCase()%].getDatabaseID());
 		[%}if(e.database.databasetype.value=2){%]
 			MongoCollection<Document> table_[%=r.name%] = mongo_[%=e.database.name%].getCollection("[%=r.name%]_[%=e.name%]");
-			table_[%=r.name%].deleteMany(Filters.eq("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getID()));
+			table_[%=r.name%].deleteMany(Filters.eq("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getDatabaseID()));
 		[%}if(r.type.database.databasetype.value=0){%]
-			mysql_[%=r.type.database.name%].runSQL("DELETE FROM [%=r.correspondence.name%]_[%=r.type.name%] WHERE [%=r.correspondence.name%] ="+ [%=e.name.toLowerCase()%].getID());
+			mysql_[%=r.type.database.name%].runSQL("DELETE FROM [%=r.correspondence.name%]_[%=r.type.name%] WHERE [%=r.correspondence.name%] ="+ [%=e.name.toLowerCase()%].getDatabaseID());
 		[%}if(r.type.database.databasetype.value=2){%]
 			MongoCollection<Document> table_[%=r.correspondence.name%] = mongo_[%=r.type.database.name%].getCollection("[%=r.correspondence.name%]_[%=r.type.name%]");
-			table_[%=r.correspondence.name%].deleteMany(Filters.eq("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getID()));
+			table_[%=r.correspondence.name%].deleteMany(Filters.eq("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getDatabaseID()));
 		[%}}}
 		if(e.database.databasetype.value=0){%]
-			mysql_[%=e.database.name%].runSQL("DELETE FROM [%=e.name%] WHERE id ="+ [%=e.name.toLowerCase()%].getID());
+			mysql_[%=e.database.name%].runSQL("DELETE FROM [%=e.name%] WHERE databaseid ="+ [%=e.name.toLowerCase()%].getDatabaseID());
 		[%}if(e.database.databasetype.value=2){%]
 			MongoCollection<Document> table = mongo_[%=e.database.name%].getCollection("[%=e.name%]");
-			table.deleteOne(Filters.eq("id", [%=e.name.toLowerCase()%].getID()));
+			table.deleteOne(Filters.eq("databaseid", [%=e.name.toLowerCase()%].getDatabaseID()));
 		[%}%]
 		}
 	}
@@ -435,10 +435,10 @@ public class PolyglotDatabase {
 		if(r.many = true and r.correspondence.many = true){%]
 	public void delete[%=r.name.ftuc()%]([%=e.name%] [%=e.name.toLowerCase()%], [%=r.type.name%] [%=r.type.name.toLowerCase()%]) {
 		[%if(e.database.databasetype.value=0){%]
-		mysql_[%=e.database.name%].runSQL("DELETE FROM [%=r.name%]_[%=e.name%] WHERE [%=r.name%] ="+ [%=e.name.toLowerCase()%].getID() +" and [%=r.correspondence.name%] ="+ [%=r.type.name.toLowerCase()%].getID());			
+		mysql_[%=e.database.name%].runSQL("DELETE FROM [%=r.name%]_[%=e.name%] WHERE [%=r.name%] ="+ [%=e.name.toLowerCase()%].getDatabaseID() +" and [%=r.correspondence.name%] ="+ [%=r.type.name.toLowerCase()%].getDatabaseID());			
 		[%}if(e.database.databasetype.value=2){%]
 		MongoCollection<Document> table = mongo_[%=e.database.name%].getCollection("[%=r.name%]_[%=e.name%]");
-		Document query = new Document("$and", Arrays.asList(new Document("[%=r.name%]", [%=e.name.toLowerCase()%].getID()), new Document("[%=r.correspondence.name%]", [%=r.type.name.toLowerCase()%].getID())));
+		Document query = new Document("$and", Arrays.asList(new Document("[%=r.name%]", [%=e.name.toLowerCase()%].getDatabaseID()), new Document("[%=r.correspondence.name%]", [%=r.type.name.toLowerCase()%].getDatabaseID())));
 		[%}%]
 	}
 	

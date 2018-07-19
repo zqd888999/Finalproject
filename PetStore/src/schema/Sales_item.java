@@ -8,19 +8,19 @@ import java.text.ParseException;
 
 public class Sales_item{
 	
-	protected int id;
+	private int id;
 	protected PolyglotDatabase db;
 	
 	public Sales_item(PolyglotDatabase db){
 		this.db = db;
 	}
 	
-	public void setID(int id) {
+	public void setDatabaseID(int id) {
 		this.id=id;
 		
 	}
 	
-	public int getID() {
+	public int getDatabaseID() {
 		return id;
 	}
 	
@@ -29,7 +29,7 @@ public class Sales_item{
 	}
 	
 	public void setProduct(Product element){
-		db.set(this, "product", element.getID());
+		db.set(this, "product", element.getDatabaseID());
 	}
 	
 	public Customer_sale getCustomer_sales(){
@@ -37,7 +37,7 @@ public class Sales_item{
 	}
 	
 	public void setCustomer_sales(Customer_sale element){
-		db.set(this, "customer_sales", element.getID());
+		db.set(this, "customer_sales", element.getDatabaseID());
 	}
 	
 	public int getSale_amount() {

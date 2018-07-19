@@ -1,22 +1,26 @@
 package schema;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class Author{
 	
-	protected int id;
+	private int id;
 	protected PolyglotDatabase db;
 	
 	public Author(PolyglotDatabase db){
 		this.db = db;
 	}
 	
-	public void setID(int id) {
+	public void setDatabaseID(int id) {
 		this.id=id;
 		
 	}
 	
-	public int getID() {
+	public int getDatabaseID() {
 		return id;
 	}
 	
@@ -26,13 +30,13 @@ public class Author{
 	
 	public void setPost(Post element){
 		if(this.getPost()==null) {
-			db.set(this, "post", element.getID());
+			db.set(this, "post", element.getDatabaseID());
 			element.setAuthor(this);
 		}
 		else{
-			if(this.getPost().getID()!=element.getID()) {
+			if(this.getPost().getDatabaseID()!=element.getDatabaseID()) {
 				db.set(this.getPost(), "Author", null);
-				db.set(this, "post", element.getID());
+				db.set(this, "post", element.getDatabaseID());
 				element.setAuthor(this);
 			}
 		}
@@ -41,7 +45,7 @@ public class Author{
 	public void addFans(Fan element){
 		boolean exist = false;
 		for(Fan member: getFans())
-			if(member.getID()==element.getID())
+			if(member.getDatabaseID()==element.getDatabaseID())
 				exist =true;
 		if(!exist){
 			db.setFans(this , element);

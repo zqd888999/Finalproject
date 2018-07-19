@@ -8,26 +8,26 @@ import java.text.ParseException;
 
 public class Product{
 	
-	protected int id;
+	private int id;
 	protected PolyglotDatabase db;
 	
 	public Product(PolyglotDatabase db){
 		this.db = db;
 	}
 	
-	public void setID(int id) {
+	public void setDatabaseID(int id) {
 		this.id=id;
 		
 	}
 	
-	public int getID() {
+	public int getDatabaseID() {
 		return id;
 	}
 	
 	public void addProducts(Product element){
 		boolean exist = false;
 		for(Product member: getProducts())
-			if(member.getID()==element.getID())
+			if(member.getDatabaseID()==element.getDatabaseID())
 				exist =true;
 		if(!exist)
 			element.setPackage(this);
@@ -50,13 +50,13 @@ public class Product{
 	}
 	
 	public void setPackage(Product element){
-		db.set(this, "package", element.getID());
+		db.set(this, "package", element.getDatabaseID());
 	}
 	
 	public void addItems(Sales_item element){
 		boolean exist = false;
 		for(Sales_item member: getItems())
-			if(member.getID()==element.getID())
+			if(member.getDatabaseID()==element.getDatabaseID())
 				exist =true;
 		if(!exist)
 			element.setProduct(this);
@@ -78,7 +78,7 @@ public class Product{
 	public void addLogs(Pet_care_log element){
 		boolean exist = false;
 		for(Pet_care_log member: getLogs())
-			if(member.getID()==element.getID())
+			if(member.getDatabaseID()==element.getDatabaseID())
 				exist =true;
 		if(!exist)
 			element.setProduct(this);

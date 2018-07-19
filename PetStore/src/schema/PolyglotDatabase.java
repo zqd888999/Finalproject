@@ -100,13 +100,13 @@ public class PolyglotDatabase {
 		mongo_newtest.getCollection("Product");
 		
 		if(!mysql_test.TableIsExit("Customer")) 
-			mysql_test.runSQL("CREATE TABLE Customer(id int,Fisrtname varchar(255),Lastname varchar(255),Address varchar(255),City varchar(255),State varchar(255),Zip varchar(255))");
+			mysql_test.runSQL("CREATE TABLE Customer(databaseid int,Fisrtname varchar(255),Lastname varchar(255),Address varchar(255),City varchar(255),State varchar(255),Zip varchar(255))");
 		
 		if(!mysql_test.TableIsExit("Customer_sale")) 
-			mysql_test.runSQL("CREATE TABLE Customer_sale(id int,Cust_ID int,Total_item_amount int,Tax_amount int,sales_date Date,Shipping_Handling_fee double,customer int)");
+			mysql_test.runSQL("CREATE TABLE Customer_sale(databaseid int,Cust_ID int,Total_item_amount int,Tax_amount int,sales_date Date,Shipping_Handling_fee double,customer int)");
 		
 		if(!mysql_test.TableIsExit("Sales_item")) 
-			mysql_test.runSQL("CREATE TABLE Sales_item(id int,sale_amount int,product int,customer_sales int)");
+			mysql_test.runSQL("CREATE TABLE Sales_item(databaseid int,sale_amount int,product int,customer_sales int)");
 		
 		mongo_newtest.getCollection("Pet_care_log");
 		
@@ -117,26 +117,26 @@ public class PolyglotDatabase {
 		FindIterable<Document> documents = products.find();
 		int id =0;
 		for (Document document : documents) 
-		   id = document.getInteger("id");
+		   id = document.getInteger("databaseid");
 		id++;
 		Product product = new Product(this);
-		product.setID(id);
+		product.setDatabaseID(id);
 		Document doc = new Document();
-	    doc.put("id", id);
+	    doc.put("databaseid", id);
 	    products.insertOne(doc);
 		return product;
 	}
 	
 	public void set(Product product, String name, Object value) {
 		MongoCollection<Document> products = mongo_newtest.getCollection("Product");
-		products.updateOne(Filters.eq("id", product.getID()), new Document("$set",new Document(name,value)));	
+		products.updateOne(Filters.eq("databaseid", product.getDatabaseID()), new Document("$set",new Document(name,value)));	
 	}
 	
 	public String get(Product product, String name) {
 		MongoCollection<Document> products = mongo_newtest.getCollection("Product");
 		FindIterable<Document> documents = products.find();
 		for (Document document : documents) {
-		    if(document.getInteger("id")==product.getID()){
+		    if(document.getInteger("databaseid")==product.getDatabaseID()){
 		    	if(document.get(name).getClass().getSimpleName().equals("Date")){
 		    		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 					return format1.format(document.get(name));   
@@ -154,11 +154,11 @@ public class PolyglotDatabase {
 		int id =0;
 		try {
 			while(rs.next())
-				id=rs.getInt("id");
+				id=rs.getInt("databaseid");
 			id++;
 			Customer customer = new Customer(this);
-			customer.setID(id);
-			mysql_test.runSQL("INSERT INTO Customer(id) VALUES("+id+")");
+			customer.setDatabaseID(id);
+			mysql_test.runSQL("INSERT INTO Customer(databaseid) VALUES("+id+")");
 			return customer;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -169,17 +169,17 @@ public class PolyglotDatabase {
 	
 	public void set(Customer customer, String name, Object value) {
 		if(value ==null)
-			mysql_test.runSQL("UPDATE Customer SET "+name+" = null WHERE id = "+customer.getID());
+			mysql_test.runSQL("UPDATE Customer SET "+name+" = null WHERE databaseid = "+customer.getDatabaseID());
 		else {
 			if(value.getClass().getSimpleName().equals("String"))
-				mysql_test.runSQL("UPDATE Customer SET "+name+" = '"+value+"' WHERE id = "+customer.getID());
+				mysql_test.runSQL("UPDATE Customer SET "+name+" = '"+value+"' WHERE databaseid = "+customer.getDatabaseID());
 			if(value.getClass().getSimpleName().equals("Date")){
 				java.sql.Date sqlDate = new java.sql.Date(((Date) value).getTime());
-				mysql_test.runSQL("UPDATE Customer SET "+name+" = '"+ sqlDate +"' WHERE id = "+customer.getID());
+				mysql_test.runSQL("UPDATE Customer SET "+name+" = '"+ sqlDate +"' WHERE databaseid = "+customer.getDatabaseID());
 			}
-			else
-				mysql_test.runSQL("UPDATE Customer SET "+name+" = "+value+" WHERE id = "+customer.getID());
-			}
+			if(value.getClass().getSimpleName().equals("Integer") || value.getClass().getSimpleName().equals("Double"))
+				mysql_test.runSQL("UPDATE Customer SET "+name+" = "+value+" WHERE databaseid = "+customer.getDatabaseID());
+		}
 	}
 	
 	public String get(Customer customer, String name) {
@@ -187,7 +187,7 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("id")==customer.getID())
+				if(rs.getInt("databaseid")==customer.getDatabaseID())
 					return rs.getString(name);
 			}
 		} catch (SQLException e) {
@@ -202,11 +202,11 @@ public class PolyglotDatabase {
 		int id =0;
 		try {
 			while(rs.next())
-				id=rs.getInt("id");
+				id=rs.getInt("databaseid");
 			id++;
 			Customer_sale customer_sale = new Customer_sale(this);
-			customer_sale.setID(id);
-			mysql_test.runSQL("INSERT INTO Customer_sale(id) VALUES("+id+")");
+			customer_sale.setDatabaseID(id);
+			mysql_test.runSQL("INSERT INTO Customer_sale(databaseid) VALUES("+id+")");
 			return customer_sale;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -217,17 +217,17 @@ public class PolyglotDatabase {
 	
 	public void set(Customer_sale customer_sale, String name, Object value) {
 		if(value ==null)
-			mysql_test.runSQL("UPDATE Customer_sale SET "+name+" = null WHERE id = "+customer_sale.getID());
+			mysql_test.runSQL("UPDATE Customer_sale SET "+name+" = null WHERE databaseid = "+customer_sale.getDatabaseID());
 		else {
 			if(value.getClass().getSimpleName().equals("String"))
-				mysql_test.runSQL("UPDATE Customer_sale SET "+name+" = '"+value+"' WHERE id = "+customer_sale.getID());
+				mysql_test.runSQL("UPDATE Customer_sale SET "+name+" = '"+value+"' WHERE databaseid = "+customer_sale.getDatabaseID());
 			if(value.getClass().getSimpleName().equals("Date")){
 				java.sql.Date sqlDate = new java.sql.Date(((Date) value).getTime());
-				mysql_test.runSQL("UPDATE Customer_sale SET "+name+" = '"+ sqlDate +"' WHERE id = "+customer_sale.getID());
+				mysql_test.runSQL("UPDATE Customer_sale SET "+name+" = '"+ sqlDate +"' WHERE databaseid = "+customer_sale.getDatabaseID());
 			}
-			else
-				mysql_test.runSQL("UPDATE Customer_sale SET "+name+" = "+value+" WHERE id = "+customer_sale.getID());
-			}
+			if(value.getClass().getSimpleName().equals("Integer") || value.getClass().getSimpleName().equals("Double"))
+				mysql_test.runSQL("UPDATE Customer_sale SET "+name+" = "+value+" WHERE databaseid = "+customer_sale.getDatabaseID());
+		}
 	}
 	
 	public String get(Customer_sale customer_sale, String name) {
@@ -235,7 +235,7 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("id")==customer_sale.getID())
+				if(rs.getInt("databaseid")==customer_sale.getDatabaseID())
 					return rs.getString(name);
 			}
 		} catch (SQLException e) {
@@ -250,11 +250,11 @@ public class PolyglotDatabase {
 		int id =0;
 		try {
 			while(rs.next())
-				id=rs.getInt("id");
+				id=rs.getInt("databaseid");
 			id++;
 			Sales_item sales_item = new Sales_item(this);
-			sales_item.setID(id);
-			mysql_test.runSQL("INSERT INTO Sales_item(id) VALUES("+id+")");
+			sales_item.setDatabaseID(id);
+			mysql_test.runSQL("INSERT INTO Sales_item(databaseid) VALUES("+id+")");
 			return sales_item;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -265,17 +265,17 @@ public class PolyglotDatabase {
 	
 	public void set(Sales_item sales_item, String name, Object value) {
 		if(value ==null)
-			mysql_test.runSQL("UPDATE Sales_item SET "+name+" = null WHERE id = "+sales_item.getID());
+			mysql_test.runSQL("UPDATE Sales_item SET "+name+" = null WHERE databaseid = "+sales_item.getDatabaseID());
 		else {
 			if(value.getClass().getSimpleName().equals("String"))
-				mysql_test.runSQL("UPDATE Sales_item SET "+name+" = '"+value+"' WHERE id = "+sales_item.getID());
+				mysql_test.runSQL("UPDATE Sales_item SET "+name+" = '"+value+"' WHERE databaseid = "+sales_item.getDatabaseID());
 			if(value.getClass().getSimpleName().equals("Date")){
 				java.sql.Date sqlDate = new java.sql.Date(((Date) value).getTime());
-				mysql_test.runSQL("UPDATE Sales_item SET "+name+" = '"+ sqlDate +"' WHERE id = "+sales_item.getID());
+				mysql_test.runSQL("UPDATE Sales_item SET "+name+" = '"+ sqlDate +"' WHERE databaseid = "+sales_item.getDatabaseID());
 			}
-			else
-				mysql_test.runSQL("UPDATE Sales_item SET "+name+" = "+value+" WHERE id = "+sales_item.getID());
-			}
+			if(value.getClass().getSimpleName().equals("Integer") || value.getClass().getSimpleName().equals("Double"))
+				mysql_test.runSQL("UPDATE Sales_item SET "+name+" = "+value+" WHERE databaseid = "+sales_item.getDatabaseID());
+		}
 	}
 	
 	public String get(Sales_item sales_item, String name) {
@@ -283,7 +283,7 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("id")==sales_item.getID())
+				if(rs.getInt("databaseid")==sales_item.getDatabaseID())
 					return rs.getString(name);
 			}
 		} catch (SQLException e) {
@@ -298,26 +298,26 @@ public class PolyglotDatabase {
 		FindIterable<Document> documents = pet_care_logs.find();
 		int id =0;
 		for (Document document : documents) 
-		   id = document.getInteger("id");
+		   id = document.getInteger("databaseid");
 		id++;
 		Pet_care_log pet_care_log = new Pet_care_log(this);
-		pet_care_log.setID(id);
+		pet_care_log.setDatabaseID(id);
 		Document doc = new Document();
-	    doc.put("id", id);
+	    doc.put("databaseid", id);
 	    pet_care_logs.insertOne(doc);
 		return pet_care_log;
 	}
 	
 	public void set(Pet_care_log pet_care_log, String name, Object value) {
 		MongoCollection<Document> pet_care_logs = mongo_newtest.getCollection("Pet_care_log");
-		pet_care_logs.updateOne(Filters.eq("id", pet_care_log.getID()), new Document("$set",new Document(name,value)));	
+		pet_care_logs.updateOne(Filters.eq("databaseid", pet_care_log.getDatabaseID()), new Document("$set",new Document(name,value)));	
 	}
 	
 	public String get(Pet_care_log pet_care_log, String name) {
 		MongoCollection<Document> pet_care_logs = mongo_newtest.getCollection("Pet_care_log");
 		FindIterable<Document> documents = pet_care_logs.find();
 		for (Document document : documents) {
-		    if(document.getInteger("id")==pet_care_log.getID()){
+		    if(document.getInteger("databaseid")==pet_care_log.getDatabaseID()){
 		    	if(document.get(name).getClass().getSimpleName().equals("Date")){
 		    		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 					return format1.format(document.get(name));   
@@ -336,9 +336,9 @@ public class PolyglotDatabase {
 		FindIterable<Document> documents = table.find();
 		for (Document document : documents) {
 		    if(document.getInteger("package")!=null) {
-		    	if(document.getInteger("package")==element.getID()) {
+		    	if(document.getInteger("package")==element.getDatabaseID()) {
 		    	Product product = new Product(this);
-		    	product.setID(document.getInteger("id"));
+		    	product.setDatabaseID(document.getInteger("databaseid"));
 		    	products.add(product);
 		    	}
 		    }
@@ -350,10 +350,10 @@ public class PolyglotDatabase {
 		MongoCollection<Document> table = mongo_newtest.getCollection("Product");
 		FindIterable<Document> documents = table.find();
 		for (Document document : documents) {
-		    if(document.getInteger("id")==element.getID()) {
+		    if(document.getInteger("databaseid")==element.getDatabaseID()) {
 		    	if(document.getInteger("package")!=null) {
 		    	Product  product = new Product(this);
-		    	product.setID(document.getInteger("package"));
+		    	product.setDatabaseID(document.getInteger("package"));
 		    	return product;
 		    	}
 		    }
@@ -367,10 +367,10 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("product")==element.getID()) 
+				if(rs.getInt("product")==element.getDatabaseID()) 
 				{
 					Sales_item sales_item =new Sales_item(this);
-					sales_item.setID(rs.getInt("id"));
+					sales_item.setDatabaseID(rs.getInt("databaseid"));
 					sales_items.add(sales_item);
 				}
 			}
@@ -388,9 +388,9 @@ public class PolyglotDatabase {
 		FindIterable<Document> documents = table.find();
 		for (Document document : documents) {
 		    if(document.getInteger("product")!=null) {
-		    	if(document.getInteger("product")==element.getID()) {
+		    	if(document.getInteger("product")==element.getDatabaseID()) {
 		    	Pet_care_log pet_care_log = new Pet_care_log(this);
-		    	pet_care_log.setID(document.getInteger("id"));
+		    	pet_care_log.setDatabaseID(document.getInteger("databaseid"));
 		    	pet_care_logs.add(pet_care_log);
 		    	}
 		    }
@@ -404,10 +404,10 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("customer")==element.getID()) 
+				if(rs.getInt("customer")==element.getDatabaseID()) 
 				{
 					Customer_sale customer_sale =new Customer_sale(this);
-					customer_sale.setID(rs.getInt("id"));
+					customer_sale.setDatabaseID(rs.getInt("databaseid"));
 					customer_sales.add(customer_sale);
 				}
 			}
@@ -424,10 +424,10 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("id")==element.getID())
+				if(rs.getInt("databaseid")==element.getDatabaseID())
 				{
 					Customer customer =new Customer(this);
-					customer.setID(rs.getInt("customer"));
+					customer.setDatabaseID(rs.getInt("customer"));
 					return customer;
 				}
 			}
@@ -444,10 +444,10 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("customer_sales")==element.getID()) 
+				if(rs.getInt("customer_sales")==element.getDatabaseID()) 
 				{
 					Sales_item sales_item =new Sales_item(this);
-					sales_item.setID(rs.getInt("id"));
+					sales_item.setDatabaseID(rs.getInt("databaseid"));
 					sales_items.add(sales_item);
 				}
 			}
@@ -464,10 +464,10 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("id")==element.getID())
+				if(rs.getInt("databaseid")==element.getDatabaseID())
 				{
 					Product product =new Product(this);
-					product.setID(rs.getInt("product"));
+					product.setDatabaseID(rs.getInt("product"));
 					return product;
 				}
 			}
@@ -483,10 +483,10 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("id")==element.getID())
+				if(rs.getInt("databaseid")==element.getDatabaseID())
 				{
 					Customer_sale customer_sale =new Customer_sale(this);
-					customer_sale.setID(rs.getInt("customer_sales"));
+					customer_sale.setDatabaseID(rs.getInt("customer_sales"));
 					return customer_sale;
 				}
 			}
@@ -501,10 +501,10 @@ public class PolyglotDatabase {
 		MongoCollection<Document> table = mongo_newtest.getCollection("Pet_care_log");
 		FindIterable<Document> documents = table.find();
 		for (Document document : documents) {
-		    if(document.getInteger("id")==element.getID()) {
+		    if(document.getInteger("databaseid")==element.getDatabaseID()) {
 		    	if(document.getInteger("product")!=null) {
 		    	Product  product = new Product(this);
-		    	product.setID(document.getInteger("product"));
+		    	product.setDatabaseID(document.getInteger("product"));
 		    	return product;
 		    	}
 		    }
@@ -518,7 +518,7 @@ public class PolyglotDatabase {
 		for (Document document : documents) {
 		if(document.get("Product_Name").equals(product_name)) {
 		    	Product product =new Product(this);
-		    	product.setID(document.getInteger("id"));
+		    	product.setDatabaseID(document.getInteger("databaseid"));
 		    	return product;
 		    }
 		}
@@ -535,7 +535,7 @@ public class PolyglotDatabase {
 	
 				{
 					Customer customer =new Customer(this);
-					customer.setID(rs.getInt("id"));
+					customer.setDatabaseID(rs.getInt("databaseid"));
 					return customer;
 				}
 			}
@@ -556,7 +556,7 @@ public class PolyglotDatabase {
 	
 				{
 					Customer_sale customer_sale =new Customer_sale(this);
-					customer_sale.setID(rs.getInt("id"));
+					customer_sale.setDatabaseID(rs.getInt("databaseid"));
 					return customer_sale;
 				}
 			}
@@ -577,7 +577,7 @@ public class PolyglotDatabase {
 	
 				{
 					Sales_item sales_item =new Sales_item(this);
-					sales_item.setID(rs.getInt("id"));
+					sales_item.setDatabaseID(rs.getInt("databaseid"));
 					return sales_item;
 				}
 			}
@@ -595,7 +595,7 @@ public class PolyglotDatabase {
 		for (Document document : documents) {
 		if(document.get("created_by_user").equals(created_by_user)) {
 		    	Pet_care_log pet_care_log =new Pet_care_log(this);
-		    	pet_care_log.setID(document.getInteger("id"));
+		    	pet_care_log.setDatabaseID(document.getInteger("databaseid"));
 		    	return pet_care_log;
 		    }
 		}
@@ -615,7 +615,7 @@ public class PolyglotDatabase {
 				set(element, "product", null);
 			}
 			MongoCollection<Document> table = mongo_newtest.getCollection("Product");
-			table.deleteOne(Filters.eq("id", product.getID()));
+			table.deleteOne(Filters.eq("databaseid", product.getDatabaseID()));
 		}
 	}
 	
@@ -624,7 +624,7 @@ public class PolyglotDatabase {
 			for(Customer_sale element : customer.getSales()){
 				set(element, "customer", null);
 			}
-			mysql_test.runSQL("DELETE FROM Customer WHERE id ="+ customer.getID());
+			mysql_test.runSQL("DELETE FROM Customer WHERE databaseid ="+ customer.getDatabaseID());
 		}
 	}
 	
@@ -633,20 +633,20 @@ public class PolyglotDatabase {
 			for(Sales_item element : customer_sale.getItems()){
 				set(element, "customer_sales", null);
 			}
-			mysql_test.runSQL("DELETE FROM Customer_sale WHERE id ="+ customer_sale.getID());
+			mysql_test.runSQL("DELETE FROM Customer_sale WHERE databaseid ="+ customer_sale.getDatabaseID());
 		}
 	}
 	
 	public void deleteSales_item(Sales_item sales_item) {
 		if(sales_item!=null){
-			mysql_test.runSQL("DELETE FROM Sales_item WHERE id ="+ sales_item.getID());
+			mysql_test.runSQL("DELETE FROM Sales_item WHERE databaseid ="+ sales_item.getDatabaseID());
 		}
 	}
 	
 	public void deletePet_care_log(Pet_care_log pet_care_log) {
 		if(pet_care_log!=null){
 			MongoCollection<Document> table = mongo_newtest.getCollection("Pet_care_log");
-			table.deleteOne(Filters.eq("id", pet_care_log.getID()));
+			table.deleteOne(Filters.eq("databaseid", pet_care_log.getDatabaseID()));
 		}
 	}
 	

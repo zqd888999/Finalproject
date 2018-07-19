@@ -151,9 +151,8 @@ public class Databasetest {
 		c1.addReplies(c3);
 		c1.addReplies(c4);
 		c3.addReplies(c5);
-		assertEquals(3,c1.getAllReplies().size());
 		assertEquals("i am 14", c1.Findreplies("14").getBody());
-		assertEquals("i am 15", c1.Findreplies("15").getBody());
+		assertEquals("i am 15", c3.Findreplies("15").getBody());
 		
 		//update references
 		p.setAuthor(a1);

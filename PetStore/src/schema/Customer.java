@@ -8,26 +8,26 @@ import java.text.ParseException;
 
 public class Customer{
 	
-	protected int id;
+	private int id;
 	protected PolyglotDatabase db;
 	
 	public Customer(PolyglotDatabase db){
 		this.db = db;
 	}
 	
-	public void setID(int id) {
+	public void setDatabaseID(int id) {
 		this.id=id;
 		
 	}
 	
-	public int getID() {
+	public int getDatabaseID() {
 		return id;
 	}
 	
 	public void addSales(Customer_sale element){
 		boolean exist = false;
 		for(Customer_sale member: getSales())
-			if(member.getID()==element.getID())
+			if(member.getDatabaseID()==element.getDatabaseID())
 				exist =true;
 		if(!exist)
 			element.setCustomer(this);

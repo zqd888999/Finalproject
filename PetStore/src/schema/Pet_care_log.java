@@ -8,19 +8,19 @@ import java.text.ParseException;
 
 public class Pet_care_log{
 	
-	protected int id;
+	private int id;
 	protected PolyglotDatabase db;
 	
 	public Pet_care_log(PolyglotDatabase db){
 		this.db = db;
 	}
 	
-	public void setID(int id) {
+	public void setDatabaseID(int id) {
 		this.id=id;
 		
 	}
 	
-	public int getID() {
+	public int getDatabaseID() {
 		return id;
 	}
 	
@@ -29,7 +29,7 @@ public class Pet_care_log{
 	}
 	
 	public void setProduct(Product element){
-		db.set(this, "product", element.getID());
+		db.set(this, "product", element.getDatabaseID());
 	}
 	
 	public String getCreated_by_user() {

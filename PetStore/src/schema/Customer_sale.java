@@ -8,19 +8,19 @@ import java.text.ParseException;
 
 public class Customer_sale{
 	
-	protected int id;
+	private int id;
 	protected PolyglotDatabase db;
 	
 	public Customer_sale(PolyglotDatabase db){
 		this.db = db;
 	}
 	
-	public void setID(int id) {
+	public void setDatabaseID(int id) {
 		this.id=id;
 		
 	}
 	
-	public int getID() {
+	public int getDatabaseID() {
 		return id;
 	}
 	
@@ -29,13 +29,13 @@ public class Customer_sale{
 	}
 	
 	public void setCustomer(Customer element){
-		db.set(this, "customer", element.getID());
+		db.set(this, "customer", element.getDatabaseID());
 	}
 	
 	public void addItems(Sales_item element){
 		boolean exist = false;
 		for(Sales_item member: getItems())
-			if(member.getID()==element.getID())
+			if(member.getDatabaseID()==element.getDatabaseID())
 				exist =true;
 		if(!exist)
 			element.setCustomer_sales(this);
