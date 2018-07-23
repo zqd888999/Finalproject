@@ -14,3 +14,11 @@ rule Database2Java
 
 	target : "../PetStore/src/schema/PolyglotDatabase.java"
 }
+
+rule ClassPath
+	transform s: Schema{
+	
+	template : "classpath.egl"
+	
+	target : "../PetStore/.classpath"
+}
