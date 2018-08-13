@@ -459,22 +459,7 @@ public class PolyglotDatabase {
 		else
 		  	return "i don't have this type yet";
 	}
-	
-	operation many(r: Reference, e: Entity):Boolean{
-		for(r1 in r.type.references){
-			if(r1.many = true and r1.type.name = e.name)
-				return false;
-		}
-		return true;
-	}
-	
-	operation manytomany(r: Reference, e: Entity):Boolean{
-		for(r1 in r.type.references){
-			if(r1.many = true and r1.type.name = e.name and r.many =true and r<>r1)
-				return true;
-		}
-		return false;
-	}%]
+	%]
 	
 
 
