@@ -45,6 +45,10 @@ public class Comment{
 		return db.getReplies(this);
 	}
 	
+	public void deleteReplies(Comment element){
+		db.set(element, "replyto", null);
+	}
+	
 	public Comment Findreplies(String title) {
 		for(Comment element: getReplies()) {
 			if(element.getTitle().equals(title))
@@ -79,3 +83,4 @@ public class Comment{
 	
 }	
 
+	

@@ -24,35 +24,43 @@ public class Fan{
 		return id;
 	}
 	
-	public void addIdol(Author element){
+	public void addIdols(Author element){
 		boolean exist = false;
-		for(Author member: getIdol())
+		for(Author member: getIdols())
 			if(member.getDatabaseID()==element.getDatabaseID())
 				exist =true;
 		if(!exist){
-			db.setIdol(this , element);
+			db.setIdols(this , element);
 			db.setFans(element, this);
 		}		
 			
 	}
 	
-	public ArrayList<Author> getIdol(){
-		return db.getIdol(this);
+	public ArrayList<Author> getIdols(){
+		return db.getIdols(this);
 	}
 	
-	public void deleteIdol(Author element){
-		db.deleteIdol(this , element);
+	public void deleteIdols(Author element){
+		db.deleteIdols(this , element);
 	}
 	
-	public Author Findidol(String name) {
-		for(Author element: getIdol()) {
+	public Author Findidols(String name) {
+		for(Author element: getIdols()) {
 			if(element.getName().equals(name))
 	
 				return element;
 		}
 		return null;
-	}
+	}	
 
+	public int getAuthorYear(Author author) {
+		return Integer.parseInt(db.get(this,author.getDatabaseID(),"year"));
+	}
+	
+	public void setAuthorYear(Author author, int year) {
+		db.set(this,author.getDatabaseID(),"year",year);
+		db.set(author,id,"year",year);
+	}
 	public String getName() {
 		return db.get(this,"name");
 	}
@@ -71,3 +79,4 @@ public class Fan{
 	
 }	
 
+	

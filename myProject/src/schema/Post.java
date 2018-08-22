@@ -37,6 +37,10 @@ public class Post{
 		return db.getComments(this);
 	}
 	
+	public void deleteComments(Comment element){
+		db.set(element, "post", null);
+	}
+	
 	public Comment Findcomments(String title) {
 		for(Comment element: getComments()) {
 			if(element.getTitle().equals(title))
@@ -89,3 +93,4 @@ public class Post{
 	
 }	
 
+	

@@ -81,9 +81,36 @@ public class [%=e.name%]{
 				return element;
 		}
 		return null;
-	}
+	}	
 
 	[%}%]
+	[%if(r.fields.size>0){
+	for(f in r.fields){%]
+	public [%=f.type%] get[%=r.type.name%][%=f.name.ftuc()%]([%=r.type.name%] [%=r.type.name.toLowerCase()%]) {
+		[%if(f.type= "int"){%]
+		return Integer.parseInt(db.get(this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]"));
+		[%}if(f.type= "double"){%]
+		return Double.valueOf(db.get(this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]"));
+		[%}if(f.type= "String"){%]
+		return db.get(this,[%=r.name.type.toLowerCase()%].getDatabaseID(),"[%=f.name%]");
+		[%}if(f.type= "Date"){%]
+		Date date = null;    
+		String str = db.get(this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]");
+		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");      
+		try {    
+           date = format1.parse(str);   
+		} catch (ParseException e) {    
+           e.printStackTrace();    
+		}   
+		return date;
+		[%}%]
+	}
+	
+	public void set[%=r.type.name%][%=f.name.ftuc()%]([%=r.type.name%] [%=r.type.name.toLowerCase()%], [%=f.type%] [%=f.name%]) {
+		db.set(this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]",[%=f.name%]);
+		db.set([%=r.type.name.toLowerCase()%],id,"[%=f.name%]",[%=f.name%]);
+	}
+	[%}}%]
 	[%}else{%]
 	public void add[%=r.name.ftuc()%]([%=r.type.name%] element){
 		boolean exist = false;
@@ -96,6 +123,10 @@ public class [%=e.name%]{
 	
 	public ArrayList<[%=r.type.name%]> get[%=r.name.ftuc()%](){
 		return db.get[%=r.name.ftuc()%](this);
+	}
+	
+	public void delete[%=r.name.ftuc()%]([%=r.type.name%] element){
+		db.set(element, "[%=r.correspondence.name%]", null);
 	}
 	
 	public [%=r.type.name%] Find[%=r.name%]([%=r.type.fields[0].type%] [%=r.type.fields[0].name.toLowerCase()%]) {
@@ -139,11 +170,4 @@ public class [%=e.name%]{
 	[%}%]
 }	
 
-[%operation loopReference(e:Entity, r:Reference):Boolean{
-	for(r1 in r.type.references){
-		if(e.name = r.type.name and r.type.name= r1.type.name and (r.many=true and r.correspondence.many = false) and (r1.many = true and r1.correspondence.many = false))
-			return true;
-	}
-	return false;
-}%]
 	

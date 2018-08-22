@@ -115,6 +115,8 @@ public class Databasetest {
 		assertEquals(1,p2.getPage());
 		assertEquals(1.2,p2.getPrice(),1e-5);
 		
+		Post p3 = db.findPostByTitle("i");
+		
 		Author a2 = db.findAuthorByName("dong");
 		assertEquals("dong", a2.getName());
 		assertEquals(23,a2.getAge());
@@ -135,12 +137,15 @@ public class Databasetest {
 		
 		a.addFans(f);
 		a.addFans(f1);
-		f.addIdol(a);
-		f.addIdol(a1);
+		f.addIdols(a);
+		f.addIdols(a1);
+		f.setAuthorYear(a, 3);
+		assertEquals(3,f.getAuthorYear(a));
+		assertEquals(3,a.getFanYear(f));
 		assertEquals(2,a.getFans().size());
-		assertEquals(2,f.getIdol().size());
+		assertEquals(2,f.getIdols().size());
 		assertEquals("jack",a.Findfans("jack").getName());
-		assertEquals("frank",f.Findidol("frank").getName());
+		assertEquals("frank",f.Findidols("frank").getName());
 		
 		p.addComments(c1);
 		p.addComments(c1);
@@ -163,22 +168,25 @@ public class Databasetest {
 		assertEquals("dong", p.getAuthor().getName());
 		assertEquals("i am ok", a.getPost().getTitle());
 		
-		f.deleteIdol(a);
-		assertEquals(1,f.getIdol().size());
+		f.deleteIdols(a);
+		assertEquals(1,f.getIdols().size());
+		
+		p.deleteComments(c1);
+		assertEquals(1,p.getComments().size());
 	}
 	
 	@After
 	public void Delete(){
-		db.deletePost(p);
-		db.deleteAuthor(a);		
-		db.deleteAuthor(a1);
-		db.deleteFan(f);
-		db.deleteFan(f1);
-		db.deleteComment(c1);
-		db.deleteComment(c2);
-		db.deleteComment(c3);
-		db.deleteComment(c4);
-		db.deleteComment(c5);
+//		db.deletePost(p);
+//		db.deleteAuthor(a);		
+//		db.deleteAuthor(a1);
+//		db.deleteFan(f);
+//		db.deleteFan(f1);
+//		db.deleteComment(c1);
+//		db.deleteComment(c2);
+//		db.deleteComment(c3);
+//		db.deleteComment(c4);
+//		db.deleteComment(c5);
 	}
 	
 

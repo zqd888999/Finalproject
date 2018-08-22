@@ -49,7 +49,7 @@ public class Author{
 				exist =true;
 		if(!exist){
 			db.setFans(this , element);
-			db.setIdol(element, this);
+			db.setIdols(element, this);
 		}		
 			
 	}
@@ -69,8 +69,16 @@ public class Author{
 				return element;
 		}
 		return null;
-	}
+	}	
 
+	public int getFanYear(Fan fan) {
+		return Integer.parseInt(db.get(this,fan.getDatabaseID(),"year"));
+	}
+	
+	public void setFanYear(Fan fan, int year) {
+		db.set(this,fan.getDatabaseID(),"year",year);
+		db.set(fan,id,"year",year);
+	}
 	public String getName() {
 		return db.get(this,"name");
 	}
@@ -89,3 +97,4 @@ public class Author{
 	
 }	
 
+	

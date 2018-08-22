@@ -14,7 +14,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -104,16 +107,14 @@ public class PolyglotDatabase {
 			mysql_test.runSQL("CREATE TABLE Author(databaseid int,name varchar(255),age int,post int)");
 		
 		if(!mysql_test.TableIsExit("fans_Author")) 
-			mysql_test.runSQL("CREATE TABLE fans_Author(idol int,fans int)");
+			mysql_test.runSQL("CREATE TABLE fans_Author(idols int,fans int,year int)");
 			
 		mongo_newtest.getCollection("Comment");
 		
-		if(!mysql_test.TableIsExit("Fan")) 
-			mysql_test.runSQL("CREATE TABLE Fan(databaseid int,name varchar(255),age int)");
+		mongo_newtest.getCollection("Fan");
 		
-		if(!mysql_test.TableIsExit("idol_Fan")) 
-			mysql_test.runSQL("CREATE TABLE idol_Fan(fans int,idol int)");
-			
+		mongo_newtest.getCollection("idols_Fan");
+		
 	}
 	
 	public Post createPost() {
@@ -250,44 +251,68 @@ public class PolyglotDatabase {
 	}
 	
 	public Fan createFan() {
-		ResultSet rs = mysql_test.findTable("Fan");
+		MongoCollection<Document> fans = mongo_newtest.getCollection("Fan");
+		FindIterable<Document> documents = fans.find();
 		int id =0;
-		try {
-			while(rs.next())
-				id=rs.getInt("databaseid");
-			id++;
-			Fan fan = new Fan(this);
-			fan.setDatabaseID(id);
-			mysql_test.runSQL("INSERT INTO Fan(databaseid) VALUES("+id+")");
-			return fan;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for (Document document : documents) 
+		   id = document.getInteger("databaseid");
+		id++;
+		Fan fan = new Fan(this);
+		fan.setDatabaseID(id);
+		Document doc = new Document();
+	    doc.put("databaseid", id);
+	    fans.insertOne(doc);
+		return fan;
+	}
+	
+	public void set(Fan fan, String name, Object value) {
+		MongoCollection<Document> fans = mongo_newtest.getCollection("Fan");
+		fans.updateOne(Filters.eq("databaseid", fan.getDatabaseID()), new Document("$set",new Document(name,value)));	
+	}
+	
+	public String get(Fan fan, String name) {
+		MongoCollection<Document> fans = mongo_newtest.getCollection("Fan");
+		FindIterable<Document> documents = fans.find();
+		for (Document document : documents) {
+		    if(document.getInteger("databaseid")==fan.getDatabaseID()){
+		    	if(document.get(name).getClass().getSimpleName().equals("Date")){
+		    		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+					return format1.format(document.get(name));   
+		    	}
+		    	else
+		    		return document.get(name).toString();
+		    }
+		    	
 		}
 		return null;
 	}
 	
-	public void set(Fan fan, String name, Object value) {
+	public void setFans(Author author,Fan fan){
+		mysql_test.runSQL("INSERT INTO fans_Author(idols ,fans ) VALUES("+author.getDatabaseID()+","+fan.getDatabaseID()+")");
+	}
+		
+	public void set(Author author,int id, String name, Object value) {
 		if(value ==null)
-			mysql_test.runSQL("UPDATE Fan SET "+name+" = null WHERE databaseid = "+fan.getDatabaseID());
+			mysql_test.runSQL("UPDATE fans_Author SET "+name+" = null WHERE idols = "+author.getDatabaseID()+" AND fans = " + id );
 		else {
 			if(value.getClass().getSimpleName().equals("String"))
-				mysql_test.runSQL("UPDATE Fan SET "+name+" = '"+value+"' WHERE databaseid = "+fan.getDatabaseID());
+				mysql_test.runSQL("UPDATE fans_Author SET "+name+" = '"+ value +"' WHERE idols = "+author.getDatabaseID()+" AND fans = " + id );
 			if(value.getClass().getSimpleName().equals("Date")){
 				java.sql.Date sqlDate = new java.sql.Date(((Date) value).getTime());
-				mysql_test.runSQL("UPDATE Fan SET "+name+" = '"+ sqlDate +"' WHERE databaseid = "+fan.getDatabaseID());
+				mysql_test.runSQL("UPDATE fans_Author SET "+name+" = '"+ sqlDate +"' WHERE idols = "+author.getDatabaseID()+" AND fans = " + id );
 			}
 			if(value.getClass().getSimpleName().equals("Integer") || value.getClass().getSimpleName().equals("Double"))
-				mysql_test.runSQL("UPDATE Fan SET "+name+" = "+value+" WHERE databaseid = "+fan.getDatabaseID());
+				mysql_test.runSQL("UPDATE fans_Author SET "+name+" = "+ value +" WHERE idols = "+author.getDatabaseID()+" AND fans = " + id );
+
 		}
 	}
-	
-	public String get(Fan fan, String name) {
-		ResultSet rs =mysql_test.findTable("Fan");
+
+	public String get(Author author, int id, String name) {
+		ResultSet rs =mysql_test.findTable("fans_Author");
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("databaseid")==fan.getDatabaseID())
+				if(rs.getInt("idols")==author.getDatabaseID() && rs.getInt("fans")== id)
 					return rs.getString(name);
 			}
 		} catch (SQLException e) {
@@ -296,15 +321,37 @@ public class PolyglotDatabase {
 		}
 		return null;
 	}
-
-	public void setFans(Author author,Fan fan){
-		mysql_test.runSQL("INSERT INTO fans_Author(idol ,fans ) VALUES("+author.getDatabaseID()+","+fan.getDatabaseID()+")");
+	
+	public void setIdols(Fan fan,Author author){
+		MongoCollection<Document> table = mongo_newtest.getCollection("idols_Fan");
+		Document doc = new Document();
+	    doc.put("fans", fan.getDatabaseID());
+	    doc.put("idols", author.getDatabaseID());
+		table.insertOne(doc);
 	}
-		
-	public void setIdol(Fan fan,Author author){
-		mysql_test.runSQL("INSERT INTO idol_Fan(fans ,idol ) VALUES("+fan.getDatabaseID()+","+author.getDatabaseID()+")");
+	public void set(Fan fan, int id, String name, Object value) {
+		MongoCollection<Document> fans = mongo_newtest.getCollection("idols_Fan");
+		Bson and = Filters.and(Filters.eq("fans", fan.getDatabaseID()), Filters.eq("idols", id));
+		fans.updateOne(and, new Document("$set",new Document(name,value)));	
 	}
-		
+	
+	public String get(Fan fan, int id, String name) {
+		MongoCollection<Document> fans = mongo_newtest.getCollection("idols_Fan");
+		FindIterable<Document> documents = fans.find();
+		for (Document document : documents) {
+		    if(document.getInteger("fans")==fan.getDatabaseID() && document.getInteger("idols")==id){
+		    	if(document.get(name).getClass().getSimpleName().equals("Date")){
+		    		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+					return format1.format(document.get(name));   
+		    	}
+		    	else
+		    		return document.get(name).toString();
+		    }
+		    	
+		}
+		return null;
+	}
+	
 	public ArrayList<Comment> getComments(Post element) {
 		ArrayList<Comment> comments = new ArrayList<Comment>();
 		MongoCollection<Document> table = mongo_newtest.getCollection("Comment");
@@ -365,7 +412,7 @@ public class PolyglotDatabase {
 		try {
 			while(rs.next())
 			{
-				if(rs.getInt("idol")==element.getDatabaseID())
+				if(rs.getInt("idols")==element.getDatabaseID())
 				{
 					Fan fan =new Fan(this);
 					fan.setDatabaseID(rs.getInt("fans"));
@@ -426,25 +473,18 @@ public class PolyglotDatabase {
 		return null;
 	}
 	
-	public ArrayList<Author> getIdol(Fan element) {
-		ResultSet rs =mysql_test.findTable("idol_Fan");
+	public ArrayList<Author> getIdols(Fan element) {
 		ArrayList<Author> authors = new ArrayList<Author>();
-		try {
-			while(rs.next())
-			{
-				if(rs.getInt("fans")==element.getDatabaseID())
-				{
-					Author author =new Author(this);
-					author.setDatabaseID(rs.getInt("idol"));
-					authors.add(author);
-				}
-			}
-			return authors;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		MongoCollection<Document> table = mongo_newtest.getCollection("idols_Fan");
+		FindIterable<Document> documents = table.find();
+		for (Document document : documents) { 
+		   	if(document.getInteger("fans")==element.getDatabaseID()) {
+		    	Author author = new Author(this);
+		    	author.setDatabaseID(document.getInteger("idols"));
+		    	authors.add(author);
+		   	} 
 		}
-		return null;
+		return authors;
 	}
 	
 	public Post findPostByTitle(String title){
@@ -504,27 +544,22 @@ public class PolyglotDatabase {
 	}
 	
 	public Fan findFanByName(String name){
-		ResultSet rs =mysql_test.findTable("Fan");
-		try {
-			while(rs.next())
-			{	
-				if(rs.getString("name").equals(name))
-	
-				{
-					Fan fan =new Fan(this);
-					fan.setDatabaseID(rs.getInt("databaseid"));
-					return fan;
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		MongoCollection<Document> table = mongo_newtest.getCollection("Fan");
+		FindIterable<Document> documents = table.find();
+		for (Document document : documents) {
+		if(document.get("name").equals(name)) {
+		    	Fan fan =new Fan(this);
+		    	fan.setDatabaseID(document.getInteger("databaseid"));
+		    	return fan;
+		    }
 		}
 		System.out.println("Fan Name "+ name+" is not exist");
 		return null;
 	}
 	
-	public void deletePost(Post post) {
+	public void deletePost(Post member) {
+		Post post = null;
+		post = findPostByTitle(member.getTitle());
 		if(post!=null){
 			for(Comment element : post.getComments()){
 				set(element, "post", null);
@@ -534,16 +569,21 @@ public class PolyglotDatabase {
 		}
 	}
 	
-	public void deleteAuthor(Author author) {
+	public void deleteAuthor(Author member) {
+		Author author = null;
+		author = findAuthorByName(member.getName());
 		if(author!=null){
 			set(author.getPost(), "author", null);
-			mysql_test.runSQL("DELETE FROM fans_Author WHERE idol ="+ author.getDatabaseID());
-			mysql_test.runSQL("DELETE FROM idol_Fan WHERE idol ="+ author.getDatabaseID());
+			mysql_test.runSQL("DELETE FROM fans_Author WHERE idols ="+ author.getDatabaseID());
+			MongoCollection<Document> table_idols = mongo_newtest.getCollection("idols_Fan");
+			table_idols.deleteMany(Filters.eq("idols", author.getDatabaseID()));
 			mysql_test.runSQL("DELETE FROM Author WHERE databaseid ="+ author.getDatabaseID());
 		}
 	}
 	
-	public void deleteComment(Comment comment) {
+	public void deleteComment(Comment member) {
+		Comment comment = null;
+		comment = findCommentByTitle(member.getTitle());
 		if(comment!=null){
 			for(Comment element : comment.getReplies()){
 				set(element, "replyto", null);
@@ -553,20 +593,26 @@ public class PolyglotDatabase {
 		}
 	}
 	
-	public void deleteFan(Fan fan) {
+	public void deleteFan(Fan member) {
+		Fan fan = null;
+		fan = findFanByName(member.getName());
 		if(fan!=null){
-			mysql_test.runSQL("DELETE FROM idol_Fan WHERE fans ="+ fan.getDatabaseID());
+			MongoCollection<Document> table_idols = mongo_newtest.getCollection("idols_Fan");
+			table_idols.deleteMany(Filters.eq("fans", fan.getDatabaseID()));
 			mysql_test.runSQL("DELETE FROM fans_Author WHERE fans ="+ fan.getDatabaseID());
-			mysql_test.runSQL("DELETE FROM Fan WHERE databaseid ="+ fan.getDatabaseID());
+			MongoCollection<Document> table = mongo_newtest.getCollection("Fan");
+			table.deleteOne(Filters.eq("databaseid", fan.getDatabaseID()));
 		}
 	}
 	
 	public void deleteFans(Author author, Fan fan) {
-		mysql_test.runSQL("DELETE FROM fans_Author WHERE fans ="+ author.getDatabaseID() +" and idol ="+ fan.getDatabaseID());			
+		mysql_test.runSQL("DELETE FROM fans_Author WHERE fans ="+ author.getDatabaseID() +" and idols ="+ fan.getDatabaseID());			
 	}
 	
-	public void deleteIdol(Fan fan, Author author) {
-		mysql_test.runSQL("DELETE FROM idol_Fan WHERE idol ="+ fan.getDatabaseID() +" and fans ="+ author.getDatabaseID());			
+	public void deleteIdols(Fan fan, Author author) {
+		MongoCollection<Document> table = mongo_newtest.getCollection("idols_Fan");
+		Document query = new Document("$and", Arrays.asList(new Document("idols", fan.getDatabaseID()), new Document("fans", author.getDatabaseID())));
+		table.deleteOne(query);
 	}
 	
 }

@@ -19,6 +19,7 @@ class Field {
 }
 
 class Reference {
+	val Field[*] fields;
   	attr String name;
   	attr boolean many;
   	ref Entity type;
@@ -36,7 +37,7 @@ class Database{
 }
 
 enum Databasetype {
-  Rational = 0;
+  RDBMS = 0;
   Key_Value = 1;
   Document = 2;
   Column_family = 3;
