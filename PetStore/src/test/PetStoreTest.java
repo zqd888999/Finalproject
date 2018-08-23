@@ -13,57 +13,71 @@ import org.junit.Test;
 
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
-import schema.Customer;
-import schema.Customer_sale;
-import schema.Pet_care_log;
-import schema.PolyglotDatabase;
-import schema.Product;
-import schema.Sales_item;
+import schema.*;
 
 public class PetStoreTest {
 	
-	protected PolyglotDatabase db;
-	protected Product package1;
-	protected Product product1;
-	protected Product product2;
-	protected Customer customer1;
-	protected Customer_sale sale1;
-	protected Customer_sale sale2;
-	protected Pet_care_log log1;
-	protected Pet_care_log log2;
-	protected Sales_item item1;
-	protected Sales_item item2;
-
+	public Animal a;
+	public AnimalOrder ao;
+	public City c1;
+	public City c2;
+	public City c3;
+	public Customer cu;
+	public Employee e;
+	public Merchandise m;
+	public MerchandiseOrder mo;
+	public PolyglotDatabase db;
+	public Sale sale;
+	public Supplier s;
 	
 	@Before
 	public void setUp() throws Exception {
-		db =  new PolyglotDatabase();
-		package1 = db.createProduct();
-		package1.setProduct_Name("1");
-		DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-		Date myDate1 = dateFormat1.parse("2018-06-01");
-		package1.setLast_update_Date(myDate1);
-		Date myDate2 = dateFormat1.parse("2018-06-02");
-		sale1 =db.createCustomer_sale();
-		sale1.setSales_date(myDate2);
-		
+		db = new PolyglotDatabase();
+		a = db.createAnimal();
+		a.setAnimalID("111");
+		a.setName("la");
+		a.setCategory("cat");
+		ao =db.createAnimalOrder();
+		ao.setPoNumber(111);
+		ao.setCost(1.1);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date myDate1 = dateFormat.parse("2018-08-23");
+		Date myDate2 = dateFormat.parse("2018-08-24");
+		ao.setOrderDate(myDate1);
+		ao.setReceiveDate(myDate2);
+		a.addAnimals(ao);
+		a.setAnimalOrderCost(ao, 1.2);
+		m = db.createMerchandise();
+		m.setItemID("adasfasf");
+		m.setDescription("this is hat");
+		sale = db.createSale();
+		sale.setSaleID("asdaf");
+		sale.setSaleDate(myDate2);
+		sale.addSaleItem(m);
+		sale.setMerchandisePrice(m, 1.2);
+		m.setSaleQuantity(sale, "good");
 	}
 	
 	@After
 	public void delete(){
-		db.deleteProduct(package1);
-		db.deleteCustomer_sale(sale1);
+		db.deleteAnimal(a);
+		db.deleteAnimalOrder(ao);
+		db.deleteMerchandise(m);
+		db.deleteSale(sale);
 	}
 	
 	
 	@Test
 	public void gettest() throws ParseException {
 		DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-		Date myDate1 = dateFormat1.parse("2018-06-01");
-		assertEquals(myDate1, package1.getLast_update_Date());
-		Date myDate2 = dateFormat1.parse("2018-06-02");
-		assertEquals(myDate2, sale1.getSales_date());
-		
+		Date myDate1 = dateFormat1.parse("2018-08-23");
+		assertEquals(myDate1, ao.getOrderDate());
+		Date myDate2 = dateFormat1.parse("2018-08-24");
+		assertEquals(myDate2, ao.getReceiveDate());
+		assertEquals(1.2,ao.getAnimalCost(a),1e-5);
+		assertEquals(1.2,m.getSalePrice(sale),1e-5);
+		assertEquals("good", sale.getMerchandiseQuantity(m));
+
 	}
 
 }

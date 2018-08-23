@@ -242,9 +242,8 @@ public class PolyglotDatabase {
 		mysql_[%=e.database.name%].runSQL("INSERT INTO [%=r.name%]_[%=e.name%]([%=r.correspondence.name%] ,[%=r.name%] ) VALUES("+[%=e.name.toLowerCase()%].getDatabaseID()+","+[%=r.type.name.toLowerCase()%].getDatabaseID()+")");
 	}
 		
-	[%if(r.fields.size>0){
-	for(f in r.fields){%]
-	public void set([%=e.name%] [%=e.name.toLowerCase()%],int id, String name, Object value) {
+	[%if(r.fields.size>0){%]
+	public void set[%=r.name.ftuc()%]([%=e.name%] [%=e.name.toLowerCase()%],int id, String name, Object value) {
 		if(value ==null)
 			mysql_[%=e.database.name%].runSQL("UPDATE [%=r.name%]_[%=e.name%] SET "+name+" = null WHERE [%=r.correspondence.name%] = "+[%=e.name.toLowerCase()%].getDatabaseID()+" AND [%=r.name%] = " + id );
 		else {
@@ -260,7 +259,7 @@ public class PolyglotDatabase {
 		}
 	}
 
-	public String get([%=e.name%] [%=e.name.toLowerCase()%], int id, String name) {
+	public String get[%=r.name.ftuc()%]([%=e.name%] [%=e.name.toLowerCase()%], int id, String name) {
 		ResultSet rs =mysql_[%=e.database.name%].findTable("[%=r.name%]_[%=e.name%]");
 		try {
 			while(rs.next())
@@ -275,7 +274,7 @@ public class PolyglotDatabase {
 		return null;
 	}
 	
-	[%}}}if(e.database.databasetype.value =2){%]
+	[%}}if(e.database.databasetype.value =2){%]
 	public void set[%=r.name.ftuc()%]([%=e.name%] [%=e.name.toLowerCase()%],[%=r.type.name%] [%=r.type.name.toLowerCase()%]){
 		MongoCollection<Document> table = mongo_[%=e.database.name%].getCollection("[%=r.name%]_[%=e.name%]");
 		Document doc = new Document();
@@ -283,15 +282,14 @@ public class PolyglotDatabase {
 	    doc.put("[%=r.name%]", [%=r.type.name.toLowerCase()%].getDatabaseID());
 		table.insertOne(doc);
 	}
-	[%if(r.fields.size>0){
-	for(f in r.fields){%]
-	public void set([%=e.name%] [%=e.name.toLowerCase()%], int id, String name, Object value) {
+	[%if(r.fields.size>0){%]
+	public void set[%=r.name.ftuc()%]([%=e.name%] [%=e.name.toLowerCase()%], int id, String name, Object value) {
 		MongoCollection<Document> [%=e.name.toLowerCase()%]s = mongo_[%=e.database.name%].getCollection("[%=r.name%]_[%=e.name%]");
 		Bson and = Filters.and(Filters.eq("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getDatabaseID()), Filters.eq("[%=r.name%]", id));
 		[%=e.name.toLowerCase()%]s.updateOne(and, new Document("$set",new Document(name,value)));	
 	}
 	
-	public String get([%=e.name%] [%=e.name.toLowerCase()%], int id, String name) {
+	public String get[%=r.name.ftuc()%]([%=e.name%] [%=e.name.toLowerCase()%], int id, String name) {
 		MongoCollection<Document> [%=e.name.toLowerCase()%]s = mongo_[%=e.database.name%].getCollection("[%=r.name%]_[%=e.name%]");
 		FindIterable<Document> documents = [%=e.name.toLowerCase()%]s.find();
 		for (Document document : documents) {
@@ -307,8 +305,7 @@ public class PolyglotDatabase {
 		}
 		return null;
 	}
-	
-	[%}}}}}}%]
+	[%}}}}}%]
 	[%for(e in s.entities){
 		for(r in e.references){
 			if(r.many= false){
@@ -478,7 +475,7 @@ public class PolyglotDatabase {
 		if([%=e.name.toLowerCase()%]!=null){
 		[%for(r in e.references){
 		if(r.many = false and r.correspondence.many = false){%]
-			set([%=e.name.toLowerCase()%].get[%=r.type.name.ftuc()%](), "[%=r.correspondence.name%]", null);
+			set([%=e.name.toLowerCase()%].get[%=r.name.ftuc()%](), "[%=r.correspondence.name%]", null);
 		[%}if(r.many and r.correspondence.many = false){%]
 			for([%=r.type.name%] element : [%=e.name.toLowerCase()%].get[%=r.name.ftuc()%]()){
 				set(element, "[%=r.correspondence.name%]", null);
@@ -487,13 +484,13 @@ public class PolyglotDatabase {
 		if(e.database.databasetype.value=0){%]
 			mysql_[%=e.database.name%].runSQL("DELETE FROM [%=r.name%]_[%=e.name%] WHERE [%=r.correspondence.name%] ="+ [%=e.name.toLowerCase()%].getDatabaseID());
 		[%}if(e.database.databasetype.value=2){%]
-			MongoCollection<Document> table_[%=r.name%] = mongo_[%=e.database.name%].getCollection("[%=r.name%]_[%=e.name%]");
-			table_[%=r.name%].deleteMany(Filters.eq("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getDatabaseID()));
+			MongoCollection<Document> table_[%=r.name%]_[%=r.correspondence.type.name%] = mongo_[%=e.database.name%].getCollection("[%=r.name%]_[%=e.name%]");
+			table_[%=r.name%]_[%=r.correspondence.type.name%].deleteMany(Filters.eq("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getDatabaseID()));
 		[%}if(r.type.database.databasetype.value=0){%]
 			mysql_[%=r.type.database.name%].runSQL("DELETE FROM [%=r.correspondence.name%]_[%=r.type.name%] WHERE [%=r.correspondence.name%] ="+ [%=e.name.toLowerCase()%].getDatabaseID());
 		[%}if(r.type.database.databasetype.value=2){%]
-			MongoCollection<Document> table_[%=r.correspondence.name%] = mongo_[%=r.type.database.name%].getCollection("[%=r.correspondence.name%]_[%=r.type.name%]");
-			table_[%=r.correspondence.name%].deleteMany(Filters.eq("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getDatabaseID()));
+			MongoCollection<Document> table_[%=r.correspondence.name%]_[%=r.type.name%] = mongo_[%=r.type.database.name%].getCollection("[%=r.correspondence.name%]_[%=r.type.name%]");
+			table_[%=r.correspondence.name%]_[%=r.type.name%].deleteMany(Filters.eq("[%=r.correspondence.name%]", [%=e.name.toLowerCase()%].getDatabaseID()));
 		[%}}}
 		if(e.database.databasetype.value=0){%]
 			mysql_[%=e.database.name%].runSQL("DELETE FROM [%=e.name%] WHERE databaseid ="+ [%=e.name.toLowerCase()%].getDatabaseID());

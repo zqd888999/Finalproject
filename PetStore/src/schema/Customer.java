@@ -24,75 +24,73 @@ public class Customer{
 		return id;
 	}
 	
-	public void addSales(Customer_sale element){
+	public City getCustomer_city(){
+		return db.getCustomer_city(this);
+	}
+	
+	public void setCustomer_city(City element){
+		if(this.getCustomer_city()==null) {
+			db.set(this, "Customer_city", element.getDatabaseID());
+			element.setCustomer_city(this);
+		}
+		else{
+			if(this.getCustomer_city().getDatabaseID()!=element.getDatabaseID()) {
+				db.set(this.getCustomer_city(), "Customer", null);
+				db.set(this, "Customer_city", element.getDatabaseID());
+				element.setCustomer_city(this);
+			}
+		}
+	}
+	
+	public void addCustomerSale(Sale element){
 		boolean exist = false;
-		for(Customer_sale member: getSales())
+		for(Sale member: getCustomerSale())
 			if(member.getDatabaseID()==element.getDatabaseID())
 				exist =true;
 		if(!exist)
-			element.setCustomer(this);
+			element.setCustomerSale(this);
 	}
 	
-	public ArrayList<Customer_sale> getSales(){
-		return db.getSales(this);
+	public ArrayList<Sale> getCustomerSale(){
+		return db.getCustomerSale(this);
 	}
 	
-	public Customer_sale Findsales(int cust_id) {
-		for(Customer_sale element: getSales()) {
+	public void deleteCustomerSale(Sale element){
+		db.set(element, "CustomerSale", null);
+	}
 	
-			if(element.getCust_ID()==cust_id)
+	public Sale FindCustomerSale(String saleid) {
+		for(Sale element: getCustomerSale()) {
+			if(element.getSaleID().equals(saleid))
 				return element;
 		}
 		return null;
 	}
 
-	public String getFisrtname() {
-		return db.get(this,"Fisrtname");
+	public String getCustomerID() {
+		return db.get(this,"CustomerID");
 	}
 	
-	public void setFisrtname(String Fisrtname) {
-		db.set(this,"Fisrtname",Fisrtname);
+	public void setCustomerID(String CustomerID) {
+		db.set(this,"CustomerID",CustomerID);
 	}
 	
-	public String getLastname() {
-		return db.get(this,"Lastname");
+	public String getName() {
+		return db.get(this,"Name");
 	}
 	
-	public void setLastname(String Lastname) {
-		db.set(this,"Lastname",Lastname);
+	public void setName(String Name) {
+		db.set(this,"Name",Name);
 	}
 	
-	public String getAddress() {
-		return db.get(this,"Address");
+	public String getPhone() {
+		return db.get(this,"Phone");
 	}
 	
-	public void setAddress(String Address) {
-		db.set(this,"Address",Address);
-	}
-	
-	public String getCity() {
-		return db.get(this,"City");
-	}
-	
-	public void setCity(String City) {
-		db.set(this,"City",City);
-	}
-	
-	public String getState() {
-		return db.get(this,"State");
-	}
-	
-	public void setState(String State) {
-		db.set(this,"State",State);
-	}
-	
-	public String getZip() {
-		return db.get(this,"Zip");
-	}
-	
-	public void setZip(String Zip) {
-		db.set(this,"Zip",Zip);
+	public void setPhone(String Phone) {
+		db.set(this,"Phone",Phone);
 	}
 	
 }	
 
+	

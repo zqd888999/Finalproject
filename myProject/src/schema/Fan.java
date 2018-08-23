@@ -54,12 +54,12 @@ public class Fan{
 	}	
 
 	public int getAuthorYear(Author author) {
-		return Integer.parseInt(db.get(this,author.getDatabaseID(),"year"));
+		return Integer.parseInt(db.getIdols(this,author.getDatabaseID(),"year"));
 	}
 	
 	public void setAuthorYear(Author author, int year) {
-		db.set(this,author.getDatabaseID(),"year",year);
-		db.set(author,id,"year",year);
+		db.setIdols(this,author.getDatabaseID(),"year",year);
+		db.setFans(author,id,"year",year);
 	}
 	public String getName() {
 		return db.get(this,"name");

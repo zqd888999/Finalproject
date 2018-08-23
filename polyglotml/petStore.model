@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ASCII"?>
+<Schema xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns="polyglotml" xmi:id="_9sXLgGvEEei1994L2u_zvQ">
+  <entities xmi:id="_3zNicKY-EeiuppEav7x7eA" name="Supplier" database="_AgYyUGvFEei1994L2u_zvQ">
+    <fields xmi:id="_6x7rcKZAEeiuppEav7x7eA" name="SupplierID" type="String"/>
+    <fields xmi:id="_7DlcIKZAEeiuppEav7x7eA" name="Name" type="String"/>
+    <fields xmi:id="_7ZPjEKZAEeiuppEav7x7eA" name="ContactName" type="String"/>
+    <fields xmi:id="_7rM1wKZAEeiuppEav7x7eA" name="Phone" type="String"/>
+    <references xmi:id="_J_kPEKZIEeiuppEav7x7eA" name="Supplier_city" type="_4YI0cKY-EeiuppEav7x7eA" correspondence="_LTiYYKZIEeiuppEav7x7eA"/>
+    <references xmi:id="_VPr4cKZIEeiuppEav7x7eA" name="AnimalorderSupplier" many="true" type="_XoElwKZAEeiuppEav7x7eA" correspondence="_WQXSUKZIEeiuppEav7x7eA"/>
+    <references xmi:id="_k1nrgKZIEeiuppEav7x7eA" name="MerchandiseorderSupplier" many="true" type="_XT8I0KZAEeiuppEav7x7eA" correspondence="_mpe10KZIEeiuppEav7x7eA"/>
+  </entities>
+  <entities xmi:id="_4YI0cKY-EeiuppEav7x7eA" name="City" database="_AgYyUGvFEei1994L2u_zvQ">
+    <fields xmi:id="_lUkjQKZGEeiuppEav7x7eA" name="CityID" type="String"/>
+    <fields xmi:id="_ncob8KZGEeiuppEav7x7eA" name="ZipCode" type="String"/>
+    <fields xmi:id="_pjeMoKZGEeiuppEav7x7eA" name="CityName" type="String"/>
+    <references xmi:id="_LTiYYKZIEeiuppEav7x7eA" name="Supplier_city" type="_3zNicKY-EeiuppEav7x7eA" correspondence="_J_kPEKZIEeiuppEav7x7eA"/>
+    <references xmi:id="_xHbbYKZIEeiuppEav7x7eA" name="Employee_city" type="_4wvhsKY-EeiuppEav7x7eA" correspondence="_xxEOQKZIEeiuppEav7x7eA"/>
+    <references xmi:id="_7BQnQKZIEeiuppEav7x7eA" name="Customer_city" type="_5gC3sKY-EeiuppEav7x7eA" correspondence="_74xeEKZIEeiuppEav7x7eA"/>
+  </entities>
+  <entities xmi:id="_4wvhsKY-EeiuppEav7x7eA" name="Employee" database="_Gk7usGvFEei1994L2u_zvQ">
+    <fields xmi:id="_tqcCAKZGEeiuppEav7x7eA" name="EmployeeID" type="String"/>
+    <fields xmi:id="_v50qsKZGEeiuppEav7x7eA" name="Name" type="String"/>
+    <fields xmi:id="_v50qsqZGEeiuppEav7x7eA" name="Phone" type="String"/>
+    <references xmi:id="_xxEOQKZIEeiuppEav7x7eA" name="Employee_city" type="_4YI0cKY-EeiuppEav7x7eA" correspondence="_xHbbYKZIEeiuppEav7x7eA"/>
+    <references xmi:id="_Er0BAKZJEeiuppEav7x7eA" name="MenchandiseOrderEmployee" many="true" type="_XT8I0KZAEeiuppEav7x7eA" correspondence="_G3B7YKZJEeiuppEav7x7eA"/>
+    <references xmi:id="_QBff0KZJEeiuppEav7x7eA" name="AnimalOrderEmployee" many="true" type="_XoElwKZAEeiuppEav7x7eA" correspondence="_QyFPQKZJEeiuppEav7x7eA"/>
+    <references xmi:id="_DoTgIKZKEeiuppEav7x7eA" name="EmployeeSale" many="true" type="_WWm94KZAEeiuppEav7x7eA" correspondence="_BSEBgKZKEeiuppEav7x7eA"/>
+  </entities>
+  <entities xmi:id="_5KGc4KY-EeiuppEav7x7eA" name="Animal" database="_Gk7usGvFEei1994L2u_zvQ">
+    <fields xmi:id="_HWOqwKZHEeiuppEav7x7eA" name="AnimalID" type="String"/>
+    <fields xmi:id="_KX8IQKZHEeiuppEav7x7eA" name="Name" type="String"/>
+    <fields xmi:id="_OKqL8KZHEeiuppEav7x7eA" name="Category" type="String"/>
+    <references xmi:id="_gjDNoKZJEeiuppEav7x7eA" name="Animals" many="true" type="_XoElwKZAEeiuppEav7x7eA" correspondence="_iMdbcKZJEeiuppEav7x7eA">
+      <fields xmi:id="_iS0ssKZKEeiuppEav7x7eA" name="cost" type="double"/>
+    </references>
+    <references xmi:id="_rJBGwKZJEeiuppEav7x7eA" name="Animalsale" many="true" type="_WWm94KZAEeiuppEav7x7eA" correspondence="_t69C4KZJEeiuppEav7x7eA">
+      <fields xmi:id="_uAoXoKZKEeiuppEav7x7eA" name="Price" type="double"/>
+    </references>
+  </entities>
+  <entities xmi:id="_5gC3sKY-EeiuppEav7x7eA" name="Customer" database="_AgYyUGvFEei1994L2u_zvQ">
+    <fields xmi:id="_Ciw7wKZHEeiuppEav7x7eA" name="CustomerID" type="String"/>
+    <fields xmi:id="_1sM5AKZGEeiuppEav7x7eA" name="Name" type="String"/>
+    <fields xmi:id="_1sM5AaZGEeiuppEav7x7eA" name="Phone" type="String"/>
+    <references xmi:id="_74xeEKZIEeiuppEav7x7eA" name="Customer_city" type="_4YI0cKY-EeiuppEav7x7eA" correspondence="_7BQnQKZIEeiuppEav7x7eA"/>
+    <references xmi:id="_1wolsKZJEeiuppEav7x7eA" name="CustomerSale" many="true" type="_WWm94KZAEeiuppEav7x7eA" correspondence="_2O85YKZJEeiuppEav7x7eA"/>
+  </entities>
+  <entities xmi:id="_WWm94KZAEeiuppEav7x7eA" name="Sale" database="_Gk7usGvFEei1994L2u_zvQ">
+    <fields xmi:id="_XHBqAKZHEeiuppEav7x7eA" name="SaleID" type="String"/>
+    <fields xmi:id="_XjOd0KZHEeiuppEav7x7eA" name="SaleDate" type="Date"/>
+    <references xmi:id="_t69C4KZJEeiuppEav7x7eA" name="SaleAnimal" many="true" type="_5KGc4KY-EeiuppEav7x7eA" correspondence="_rJBGwKZJEeiuppEav7x7eA">
+      <fields xmi:id="_xGANIKZKEeiuppEav7x7eA" name="Price" type="double"/>
+    </references>
+    <references xmi:id="_2O85YKZJEeiuppEav7x7eA" name="CustomerSale" type="_5gC3sKY-EeiuppEav7x7eA" correspondence="_1wolsKZJEeiuppEav7x7eA"/>
+    <references xmi:id="_BSEBgKZKEeiuppEav7x7eA" name="EmployeeSale" type="_4wvhsKY-EeiuppEav7x7eA" correspondence="_DoTgIKZKEeiuppEav7x7eA"/>
+    <references xmi:id="_JiFW8KZKEeiuppEav7x7eA" name="SaleItem" many="true" type="_WscD8KZAEeiuppEav7x7eA" correspondence="_KnPoMKZKEeiuppEav7x7eA">
+      <fields xmi:id="_z-h5cKZKEeiuppEav7x7eA" name="Quantity" type="String"/>
+      <fields xmi:id="_0TT2oKZKEeiuppEav7x7eA" name="Price" type="double"/>
+    </references>
+  </entities>
+  <entities xmi:id="_WscD8KZAEeiuppEav7x7eA" name="Merchandise" database="_AgYyUGvFEei1994L2u_zvQ">
+    <fields xmi:id="_xrhcYKZHEeiuppEav7x7eA" name="ItemID" type="String"/>
+    <fields xmi:id="_0GmXsKZHEeiuppEav7x7eA" name="Description" type="String"/>
+    <references xmi:id="_KnPoMKZKEeiuppEav7x7eA" name="Items" many="true" type="_WWm94KZAEeiuppEav7x7eA" correspondence="_JiFW8KZKEeiuppEav7x7eA">
+      <fields xmi:id="_5BpOAKZKEeiuppEav7x7eA" name="Quantity" type="String"/>
+      <fields xmi:id="_5BpOAaZKEeiuppEav7x7eA" name="Price" type="double"/>
+    </references>
+    <references xmi:id="_ThDhgKZKEeiuppEav7x7eA" name="MerchandiseOrder" many="true" type="_XT8I0KZAEeiuppEav7x7eA" correspondence="_T9VN0KZKEeiuppEav7x7eA">
+      <fields xmi:id="_5dmKMKZKEeiuppEav7x7eA" name="Quantity" type="String"/>
+      <fields xmi:id="_5dmKMaZKEeiuppEav7x7eA" name="Price" type="double"/>
+    </references>
+  </entities>
+  <entities xmi:id="_XT8I0KZAEeiuppEav7x7eA" name="MerchandiseOrder" database="_Gk7usGvFEei1994L2u_zvQ">
+    <fields xmi:id="_4oVdgKZHEeiuppEav7x7eA" name="OrderID" type="String"/>
+    <fields xmi:id="_70-YoKZHEeiuppEav7x7eA" name="OrderDate" type="Date"/>
+    <fields xmi:id="__bKcMKZHEeiuppEav7x7eA" name="ReceiveDate" type="Date"/>
+    <fields xmi:id="_DsRsEKZIEeiuppEav7x7eA" name="Cost" type="double"/>
+    <references xmi:id="_mpe10KZIEeiuppEav7x7eA" name="MerchandiseorderSupplier" type="_3zNicKY-EeiuppEav7x7eA" correspondence="_k1nrgKZIEeiuppEav7x7eA"/>
+    <references xmi:id="_G3B7YKZJEeiuppEav7x7eA" name="MenchandiseOrderEmployee" type="_4wvhsKY-EeiuppEav7x7eA" correspondence="_Er0BAKZJEeiuppEav7x7eA"/>
+    <references xmi:id="_T9VN0KZKEeiuppEav7x7eA" name="OrderItem" many="true" type="_WscD8KZAEeiuppEav7x7eA" correspondence="_ThDhgKZKEeiuppEav7x7eA">
+      <fields xmi:id="_9s41IKZKEeiuppEav7x7eA" name="Quantity" type="String"/>
+      <fields xmi:id="_9s41IaZKEeiuppEav7x7eA" name="Price" type="double"/>
+    </references>
+  </entities>
+  <entities xmi:id="_XoElwKZAEeiuppEav7x7eA" name="AnimalOrder" database="_AgYyUGvFEei1994L2u_zvQ">
+    <fields xmi:id="_FxEOUKZIEeiuppEav7x7eA" name="PoNumber" type="int"/>
+    <fields xmi:id="_JLaOQKZIEeiuppEav7x7eA" name="OrderDate" type="Date"/>
+    <fields xmi:id="_JLaOQaZIEeiuppEav7x7eA" name="ReceiveDate" type="Date"/>
+    <fields xmi:id="_JLaOQqZIEeiuppEav7x7eA" name="Cost" type="double"/>
+    <references xmi:id="_WQXSUKZIEeiuppEav7x7eA" name="AnimalorderSupplier" type="_3zNicKY-EeiuppEav7x7eA" correspondence="_VPr4cKZIEeiuppEav7x7eA"/>
+    <references xmi:id="_QyFPQKZJEeiuppEav7x7eA" name="AnimalOrderEmployee" type="_4wvhsKY-EeiuppEav7x7eA" correspondence="_QBff0KZJEeiuppEav7x7eA"/>
+    <references xmi:id="_iMdbcKZJEeiuppEav7x7eA" name="AnimalOrderItem" many="true" type="_5KGc4KY-EeiuppEav7x7eA" correspondence="_gjDNoKZJEeiuppEav7x7eA">
+      <fields xmi:id="_l2aIMKZKEeiuppEav7x7eA" name="cost" type="double"/>
+    </references>
+  </entities>
+  <databases xmi:id="_AgYyUGvFEei1994L2u_zvQ" type="Mysql" name="test" host="localhost" port="3306" user="root" password=""/>
+  <databases xmi:id="_Gk7usGvFEei1994L2u_zvQ" databasetype="Document" type="MongoDB" name="newtest" host="localhost" port="27017"/>
+</Schema>

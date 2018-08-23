@@ -291,7 +291,7 @@ public class PolyglotDatabase {
 		mysql_test.runSQL("INSERT INTO fans_Author(idols ,fans ) VALUES("+author.getDatabaseID()+","+fan.getDatabaseID()+")");
 	}
 		
-	public void set(Author author,int id, String name, Object value) {
+	public void setFans(Author author,int id, String name, Object value) {
 		if(value ==null)
 			mysql_test.runSQL("UPDATE fans_Author SET "+name+" = null WHERE idols = "+author.getDatabaseID()+" AND fans = " + id );
 		else {
@@ -307,7 +307,7 @@ public class PolyglotDatabase {
 		}
 	}
 
-	public String get(Author author, int id, String name) {
+	public String getFans(Author author, int id, String name) {
 		ResultSet rs =mysql_test.findTable("fans_Author");
 		try {
 			while(rs.next())
@@ -329,13 +329,13 @@ public class PolyglotDatabase {
 	    doc.put("idols", author.getDatabaseID());
 		table.insertOne(doc);
 	}
-	public void set(Fan fan, int id, String name, Object value) {
+	public void setIdols(Fan fan, int id, String name, Object value) {
 		MongoCollection<Document> fans = mongo_newtest.getCollection("idols_Fan");
 		Bson and = Filters.and(Filters.eq("fans", fan.getDatabaseID()), Filters.eq("idols", id));
 		fans.updateOne(and, new Document("$set",new Document(name,value)));	
 	}
 	
-	public String get(Fan fan, int id, String name) {
+	public String getIdols(Fan fan, int id, String name) {
 		MongoCollection<Document> fans = mongo_newtest.getCollection("idols_Fan");
 		FindIterable<Document> documents = fans.find();
 		for (Document document : documents) {
@@ -351,7 +351,6 @@ public class PolyglotDatabase {
 		}
 		return null;
 	}
-	
 	public ArrayList<Comment> getComments(Post element) {
 		ArrayList<Comment> comments = new ArrayList<Comment>();
 		MongoCollection<Document> table = mongo_newtest.getCollection("Comment");
@@ -575,8 +574,8 @@ public class PolyglotDatabase {
 		if(author!=null){
 			set(author.getPost(), "author", null);
 			mysql_test.runSQL("DELETE FROM fans_Author WHERE idols ="+ author.getDatabaseID());
-			MongoCollection<Document> table_idols = mongo_newtest.getCollection("idols_Fan");
-			table_idols.deleteMany(Filters.eq("idols", author.getDatabaseID()));
+			MongoCollection<Document> table_idols_Fan = mongo_newtest.getCollection("idols_Fan");
+			table_idols_Fan.deleteMany(Filters.eq("idols", author.getDatabaseID()));
 			mysql_test.runSQL("DELETE FROM Author WHERE databaseid ="+ author.getDatabaseID());
 		}
 	}
@@ -597,8 +596,8 @@ public class PolyglotDatabase {
 		Fan fan = null;
 		fan = findFanByName(member.getName());
 		if(fan!=null){
-			MongoCollection<Document> table_idols = mongo_newtest.getCollection("idols_Fan");
-			table_idols.deleteMany(Filters.eq("fans", fan.getDatabaseID()));
+			MongoCollection<Document> table_idols_Fan = mongo_newtest.getCollection("idols_Fan");
+			table_idols_Fan.deleteMany(Filters.eq("fans", fan.getDatabaseID()));
 			mysql_test.runSQL("DELETE FROM fans_Author WHERE fans ="+ fan.getDatabaseID());
 			MongoCollection<Document> table = mongo_newtest.getCollection("Fan");
 			table.deleteOne(Filters.eq("databaseid", fan.getDatabaseID()));

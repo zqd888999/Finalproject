@@ -35,13 +35,13 @@ public class [%=e.name%]{
 		[%if(r.correspondence.many = false){%]
 		if(this.get[%=r.name.ftuc()%]()==null) {
 			db.set(this, "[%=r.name%]", element.getDatabaseID());
-			element.set[%=e.name.ftuc()%](this);
+			element.set[%=r.correspondence.name.ftuc()%](this);
 		}
 		else{
 			if(this.get[%=r.name.ftuc()%]().getDatabaseID()!=element.getDatabaseID()) {
 				db.set(this.get[%=r.name.ftuc()%](), "[%=e.name%]", null);
 				db.set(this, "[%=r.name%]", element.getDatabaseID());
-				element.set[%=e.name.ftuc()%](this);
+				element.set[%=r.correspondence.name.ftuc()%](this);
 			}
 		}
 		[%}else{%]
@@ -88,14 +88,14 @@ public class [%=e.name%]{
 	for(f in r.fields){%]
 	public [%=f.type%] get[%=r.type.name%][%=f.name.ftuc()%]([%=r.type.name%] [%=r.type.name.toLowerCase()%]) {
 		[%if(f.type= "int"){%]
-		return Integer.parseInt(db.get(this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]"));
+		return Integer.parseInt(db.get[%=r.name.ftuc()%](this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]"));
 		[%}if(f.type= "double"){%]
-		return Double.valueOf(db.get(this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]"));
+		return Double.valueOf(db.get[%=r.name.ftuc()%](this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]"));
 		[%}if(f.type= "String"){%]
-		return db.get(this,[%=r.name.type.toLowerCase()%].getDatabaseID(),"[%=f.name%]");
+		return db.get[%=r.name.ftuc()%](this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]");
 		[%}if(f.type= "Date"){%]
 		Date date = null;    
-		String str = db.get(this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]");
+		String str = db.get[%=r.name.ftuc()%](this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]");
 		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");      
 		try {    
            date = format1.parse(str);   
@@ -107,8 +107,8 @@ public class [%=e.name%]{
 	}
 	
 	public void set[%=r.type.name%][%=f.name.ftuc()%]([%=r.type.name%] [%=r.type.name.toLowerCase()%], [%=f.type%] [%=f.name%]) {
-		db.set(this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]",[%=f.name%]);
-		db.set([%=r.type.name.toLowerCase()%],id,"[%=f.name%]",[%=f.name%]);
+		db.set[%=r.name.ftuc()%](this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]",[%=f.name%]);
+		db.set[%=r.correspondence.name.ftuc()%]([%=r.type.name.toLowerCase()%],id,"[%=f.name%]",[%=f.name%]);
 	}
 	[%}}%]
 	[%}else{%]
