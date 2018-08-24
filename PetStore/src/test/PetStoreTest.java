@@ -77,6 +77,7 @@ public class PetStoreTest {
 		assertEquals(1.2,ao.getAnimalCost(a),1e-5);
 		assertEquals(1.2,m.getSalePrice(sale),1e-5);
 		assertEquals("good", sale.getMerchandiseQuantity(m));
+		assertEquals(1.1,db.findAnimalOrderByPoNumber(111).getCost(),1e-5);
 
 	}
 

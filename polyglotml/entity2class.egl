@@ -86,7 +86,7 @@ public class [%=e.name%]{
 	[%}%]
 	[%if(r.fields.size>0){
 	for(f in r.fields){%]
-	public [%=f.type%] get[%=r.type.name%][%=f.name.ftuc()%]([%=r.type.name%] [%=r.type.name.toLowerCase()%]) {
+	public [%=f.type%] get[%=r.name%][%=f.name.ftuc()%]([%=r.type.name%] [%=r.type.name.toLowerCase()%]) {
 		[%if(f.type= "int"){%]
 		return Integer.parseInt(db.get[%=r.name.ftuc()%](this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]"));
 		[%}if(f.type= "double"){%]
@@ -106,7 +106,7 @@ public class [%=e.name%]{
 		[%}%]
 	}
 	
-	public void set[%=r.type.name%][%=f.name.ftuc()%]([%=r.type.name%] [%=r.type.name.toLowerCase()%], [%=f.type%] [%=f.name%]) {
+	public void set[%=r.name%][%=f.name.ftuc()%]([%=r.type.name%] [%=r.type.name.toLowerCase()%], [%=f.type%] [%=f.name%]) {
 		db.set[%=r.name.ftuc()%](this,[%=r.type.name.toLowerCase()%].getDatabaseID(),"[%=f.name%]",[%=f.name%]);
 		db.set[%=r.correspondence.name.ftuc()%]([%=r.type.name.toLowerCase()%],id,"[%=f.name%]",[%=f.name%]);
 	}

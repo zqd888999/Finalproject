@@ -50,12 +50,12 @@
     <references xmi:id="_t69C4KZJEeiuppEav7x7eA" name="SaleAnimal" many="true" type="_5KGc4KY-EeiuppEav7x7eA" correspondence="_rJBGwKZJEeiuppEav7x7eA">
       <fields xmi:id="_xGANIKZKEeiuppEav7x7eA" name="Price" type="double"/>
     </references>
-    <references xmi:id="_2O85YKZJEeiuppEav7x7eA" name="CustomerSale" type="_5gC3sKY-EeiuppEav7x7eA" correspondence="_1wolsKZJEeiuppEav7x7eA"/>
-    <references xmi:id="_BSEBgKZKEeiuppEav7x7eA" name="EmployeeSale" type="_4wvhsKY-EeiuppEav7x7eA" correspondence="_DoTgIKZKEeiuppEav7x7eA"/>
     <references xmi:id="_JiFW8KZKEeiuppEav7x7eA" name="SaleItem" many="true" type="_WscD8KZAEeiuppEav7x7eA" correspondence="_KnPoMKZKEeiuppEav7x7eA">
       <fields xmi:id="_z-h5cKZKEeiuppEav7x7eA" name="Quantity" type="String"/>
       <fields xmi:id="_0TT2oKZKEeiuppEav7x7eA" name="Price" type="double"/>
     </references>
+    <references xmi:id="_2O85YKZJEeiuppEav7x7eA" name="CustomerSale" type="_5gC3sKY-EeiuppEav7x7eA" correspondence="_1wolsKZJEeiuppEav7x7eA"/>
+    <references xmi:id="_BSEBgKZKEeiuppEav7x7eA" name="EmployeeSale" type="_4wvhsKY-EeiuppEav7x7eA" correspondence="_DoTgIKZKEeiuppEav7x7eA"/>
   </entities>
   <entities xmi:id="_WscD8KZAEeiuppEav7x7eA" name="Merchandise" database="_AgYyUGvFEei1994L2u_zvQ">
     <fields xmi:id="_xrhcYKZHEeiuppEav7x7eA" name="ItemID" type="String"/>
