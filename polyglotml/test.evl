@@ -1,0 +1,118 @@
+context Entity{
+	
+	constraint HasName {
+		
+		check : self.name.isDefined()
+		
+		message : 'Unnamed ' + self.eClass().name+' not allowed'
+		
+	}
+	constraint HasField {
+		
+		guard: self.satisfies ("HasName")
+		
+		check : self.fields.size()>0
+		
+		message : self.eClass().name+ self.name+' should have at least one field'
+	}
+	
+	constraint HasDatabase {
+		
+		guard: self.satisfies ("HasName")
+		
+		check : self.database.isDefined()
+		
+		message : self.eClass().name+ self.name+' should have at least one field'
+	}
+}
+
+context Field{
+	constraint HasName {
+		
+		check : self.name.isDefined()
+		
+		message : 'Unnamed ' + self.eClass().name+' not allowed'
+	}
+	
+	constraint HasType {
+		
+		guard: self.satisfies ("HasName")
+		
+		check {
+			return(self.type='int' or self.type='double' or self.type='String' or self.type='Date');
+		}
+		message : self.eClass().name+ self.name+' can not recognize'
+	}
+
+}
+
+context Reference{
+	constraint HasName {
+		
+		check : self.name.isDefined()
+		
+		message : 'Unnamed ' + self.eClass().name+' not allowed'
+	}
+	
+	constraint HasType {
+		
+		guard: self.satisfies ("HasName")
+		
+		check: self.type.isDefined()
+		
+		message : self.eClass().name+ self.name+' target entity is empty'
+	}
+	
+	constraint HasCorrespondence {
+		
+		guard: self.satisfies ("HasName")
+		
+		check: self.correspondence.isDefined()
+		
+		message : self.eClass().name+ self.name+' correspondence reference is empty'
+	}
+
+	constraint RightCorrespondence {
+	
+		guard{
+			return (self.satisfies ("HasName") and
+			self.satisfies ("HasCorrespondence") and
+			self.satisfies ("HasType"));
+		} 
+		
+		check{
+			for(r in self.type.references){
+				if(r = self.correspondence){
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		message : self.eClass().name+ self.name+' correspondence reference is not in target Entity'
+	
+	}
+	
+	constraint SameCorrespondence {
+		guard: self.satisfies("RightCorrespondence")
+		
+		check: self.correspondence.name<>self.name
+		
+		message : self.eClass().name+ self.name+'cannot have correspondence reference with same name'
+	}
+}
+
+context Database{
+
+	constraint HasName {
+		
+		check {
+			return(self.name.isDefined() and
+			self.port.isDefined() and
+			self.host.isDefined() and
+			self.type.isDefined() and
+			self.Databasetype.isDefined());
+		}
+		message : self.eClass().name+ self.name +' is not completed '
+	}
+}

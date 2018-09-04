@@ -118,20 +118,25 @@ public class Databasetest {
 		Post p3 = db.findPostByTitle("i");
 		
 		Author a2 = db.findAuthorByName("dong");
+		Author a3 = db.findAuthorByName("1");
 		assertEquals("dong", a2.getName());
 		assertEquals(23,a2.getAge());
 		
 		Fan f2 = db.findFanByName("jack");
+		Fan f3 = db.findFanByName("jack3");
 		assertEquals("jack", f2.getName());
 		assertEquals(14,f2.getAge());
 		
 		Comment c6 = db.findCommentByTitle("11");
+		Comment c7 = db.findCommentByTitle("10");
+		
 		assertEquals("i am 11", c6.getBody());
 	}
 	
 	@Test
 	public void Test6_setReference(){	
 		p.setAuthor(a);
+		a.setPost(p);
 		assertEquals("dong", p.getAuthor().getName());
 		assertEquals("i am ok", a.getPost().getTitle());
 		
@@ -140,8 +145,10 @@ public class Databasetest {
 		f.addIdols(a);
 		f.addIdols(a1);
 		f.setAuthorYear(a, 3);
+		a.setFanYear(f1, 2);
 		assertEquals(3,f.getAuthorYear(a));
 		assertEquals(3,a.getFanYear(f));
+		assertEquals(2,a.getFanYear(f1));
 		assertEquals(2,a.getFans().size());
 		assertEquals(2,f.getIdols().size());
 		assertEquals("jack",a.Findfans("jack").getName());
@@ -152,12 +159,14 @@ public class Databasetest {
 		p.addComments(c2);
 		assertEquals(2,p.getComments().size());
 		assertEquals("i am 12",p.Findcomments("12").getBody());
+		assertEquals("i am ok", c1.getPost().getTitle());
 		
 		c1.addReplies(c3);
 		c1.addReplies(c4);
 		c3.addReplies(c5);
 		assertEquals("i am 14", c1.Findreplies("14").getBody());
 		assertEquals("i am 15", c3.Findreplies("15").getBody());
+		assertEquals("i am 11", c3.getReplyto().getBody());
 		
 		//update references
 		p.setAuthor(a1);
@@ -171,22 +180,26 @@ public class Databasetest {
 		f.deleteIdols(a);
 		assertEquals(1,f.getIdols().size());
 		
+		a.deleteFans(f);
+		assertEquals(1,a.getFans().size());
+		
+		p.deleteComments(c1);
 		p.deleteComments(c1);
 		assertEquals(1,p.getComments().size());
 	}
 	
 	@After
 	public void Delete(){
-//		db.deletePost(p);
-//		db.deleteAuthor(a);		
-//		db.deleteAuthor(a1);
-//		db.deleteFan(f);
-//		db.deleteFan(f1);
-//		db.deleteComment(c1);
-//		db.deleteComment(c2);
-//		db.deleteComment(c3);
-//		db.deleteComment(c4);
-//		db.deleteComment(c5);
+		db.deletePost(p);
+		db.deleteAuthor(a);		
+		db.deleteAuthor(a1);
+		db.deleteFan(f);
+		db.deleteFan(f1);
+		db.deleteComment(c1);
+		db.deleteComment(c2);
+		db.deleteComment(c3);
+		db.deleteComment(c4);
+		db.deleteComment(c5);
 	}
 	
 
