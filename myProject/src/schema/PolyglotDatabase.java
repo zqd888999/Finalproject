@@ -135,7 +135,7 @@ public class PolyglotDatabase {
 		return null;
 	}
 	
-	public void set(Post post, String name, Object value) {
+	public void setAttribute(Post post, String name, Object value) {
 		if(value ==null)
 			mysql_test.runSQL("UPDATE Post SET "+name+" = null WHERE databaseid = "+post.getDatabaseID());
 		else {
@@ -150,7 +150,7 @@ public class PolyglotDatabase {
 		}
 	}
 	
-	public String get(Post post, String name) {
+	public String getAttribute(Post post, String name) {
 		ResultSet rs =mysql_test.findTable("Post");
 		try {
 			while(rs.next())
@@ -183,7 +183,7 @@ public class PolyglotDatabase {
 		return null;
 	}
 	
-	public void set(Author author, String name, Object value) {
+	public void setAttribute(Author author, String name, Object value) {
 		if(value ==null)
 			mysql_test.runSQL("UPDATE Author SET "+name+" = null WHERE databaseid = "+author.getDatabaseID());
 		else {
@@ -198,7 +198,7 @@ public class PolyglotDatabase {
 		}
 	}
 	
-	public String get(Author author, String name) {
+	public String getAttribute(Author author, String name) {
 		ResultSet rs =mysql_test.findTable("Author");
 		try {
 			while(rs.next())
@@ -228,12 +228,12 @@ public class PolyglotDatabase {
 		return comment;
 	}
 	
-	public void set(Comment comment, String name, Object value) {
+	public void setAttribute(Comment comment, String name, Object value) {
 		MongoCollection<Document> comments = mongo_newtest.getCollection("Comment");
 		comments.updateOne(Filters.eq("databaseid", comment.getDatabaseID()), new Document("$set",new Document(name,value)));	
 	}
 	
-	public String get(Comment comment, String name) {
+	public String getAttribute(Comment comment, String name) {
 		MongoCollection<Document> comments = mongo_newtest.getCollection("Comment");
 		FindIterable<Document> documents = comments.find();
 		for (Document document : documents) {
@@ -265,12 +265,12 @@ public class PolyglotDatabase {
 		return fan;
 	}
 	
-	public void set(Fan fan, String name, Object value) {
+	public void setAttribute(Fan fan, String name, Object value) {
 		MongoCollection<Document> fans = mongo_newtest.getCollection("Fan");
 		fans.updateOne(Filters.eq("databaseid", fan.getDatabaseID()), new Document("$set",new Document(name,value)));	
 	}
 	
-	public String get(Fan fan, String name) {
+	public String getAttribute(Fan fan, String name) {
 		MongoCollection<Document> fans = mongo_newtest.getCollection("Fan");
 		FindIterable<Document> documents = fans.find();
 		for (Document document : documents) {
@@ -561,9 +561,9 @@ public class PolyglotDatabase {
 		post = findPostByTitle(member.getTitle());
 		if(post!=null){
 			for(Comment element : post.getComments()){
-				set(element, "post", null);
+				setAttribute(element, "post", null);
 			}
-			set(post.getAuthor(), "post", null);
+			setAttribute(post.getAuthor(), "post", null);
 			mysql_test.runSQL("DELETE FROM Post WHERE databaseid ="+ post.getDatabaseID());
 		}
 	}
@@ -572,7 +572,7 @@ public class PolyglotDatabase {
 		Author author = null;
 		author = findAuthorByName(member.getName());
 		if(author!=null){
-			set(author.getPost(), "author", null);
+			setAttribute(author.getPost(), "author", null);
 			mysql_test.runSQL("DELETE FROM fans_Author WHERE idols ="+ author.getDatabaseID());
 			MongoCollection<Document> table_idols_Fan = mongo_newtest.getCollection("idols_Fan");
 			table_idols_Fan.deleteMany(Filters.eq("idols", author.getDatabaseID()));
@@ -585,7 +585,7 @@ public class PolyglotDatabase {
 		comment = findCommentByTitle(member.getTitle());
 		if(comment!=null){
 			for(Comment element : comment.getReplies()){
-				set(element, "replyto", null);
+				setAttribute(element, "replyto", null);
 			}
 			MongoCollection<Document> table = mongo_newtest.getCollection("Comment");
 			table.deleteOne(Filters.eq("databaseid", comment.getDatabaseID()));

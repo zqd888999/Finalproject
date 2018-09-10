@@ -53,19 +53,19 @@ public class Merchandise{
 		return null;
 	}	
 
-	public String getSaleQuantity(Sale sale) {
+	public String getItemsQuantity(Sale sale) {
 		return db.getItems(this,sale.getDatabaseID(),"Quantity");
 	}
 	
-	public void setSaleQuantity(Sale sale, String Quantity) {
+	public void setItemsQuantity(Sale sale, String Quantity) {
 		db.setItems(this,sale.getDatabaseID(),"Quantity",Quantity);
 		db.setSaleItem(sale,id,"Quantity",Quantity);
 	}
-	public double getSalePrice(Sale sale) {
+	public double getItemsPrice(Sale sale) {
 		return Double.valueOf(db.getItems(this,sale.getDatabaseID(),"Price"));
 	}
 	
-	public void setSalePrice(Sale sale, double Price) {
+	public void setItemsPrice(Sale sale, double Price) {
 		db.setItems(this,sale.getDatabaseID(),"Price",Price);
 		db.setSaleItem(sale,id,"Price",Price);
 	}

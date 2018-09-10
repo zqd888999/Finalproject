@@ -29,7 +29,7 @@ public class Comment{
 	}
 	
 	public void setPost(Post element){
-		db.set(this, "post", element.getDatabaseID());
+		db.setAttribute(this, "post", element.getDatabaseID());
 	}
 	
 	public void addReplies(Comment element){
@@ -46,7 +46,7 @@ public class Comment{
 	}
 	
 	public void deleteReplies(Comment element){
-		db.set(element, "replyto", null);
+		db.setAttribute(element, "replyto", null);
 	}
 	
 	public Comment Findreplies(String title) {
@@ -62,23 +62,23 @@ public class Comment{
 	}
 	
 	public void setReplyto(Comment element){
-		db.set(this, "replyto", element.getDatabaseID());
+		db.setAttribute(this, "replyto", element.getDatabaseID());
 	}
 	
 	public String getTitle() {
-		return db.get(this,"title");
+		return db.getAttribute(this,"title");
 	}
 	
 	public void setTitle(String title) {
-		db.set(this,"title",title);
+		db.setAttribute(this,"title",title);
 	}
 	
 	public String getBody() {
-		return db.get(this,"body");
+		return db.getAttribute(this,"body");
 	}
 	
 	public void setBody(String body) {
-		db.set(this,"body",body);
+		db.setAttribute(this,"body",body);
 	}
 	
 }	

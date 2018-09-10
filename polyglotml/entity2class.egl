@@ -34,18 +34,18 @@ public class [%=e.name%]{
 	public void set[%=r.name.ftuc()%]([%=r.type.name%] element){
 		[%if(r.correspondence.many = false){%]
 		if(this.get[%=r.name.ftuc()%]()==null) {
-			db.set(this, "[%=r.name%]", element.getDatabaseID());
+			db.setAttribute(this, "[%=r.name%]", element.getDatabaseID());
 			element.set[%=r.correspondence.name.ftuc()%](this);
 		}
 		else{
 			if(this.get[%=r.name.ftuc()%]().getDatabaseID()!=element.getDatabaseID()) {
-				db.set(this.get[%=r.name.ftuc()%](), "[%=e.name%]", null);
-				db.set(this, "[%=r.name%]", element.getDatabaseID());
+				db.setAttribute(this.get[%=r.name.ftuc()%](), "[%=e.name%]", null);
+				db.setAttribute(this, "[%=r.name%]", element.getDatabaseID());
 				element.set[%=r.correspondence.name.ftuc()%](this);
 			}
 		}
 		[%}else{%]
-		db.set(this, "[%=r.name%]", element.getDatabaseID());
+		db.setAttribute(this, "[%=r.name%]", element.getDatabaseID());
 		[%}%]
 	}
 	
@@ -126,7 +126,7 @@ public class [%=e.name%]{
 	}
 	
 	public void delete[%=r.name.ftuc()%]([%=r.type.name%] element){
-		db.set(element, "[%=r.correspondence.name%]", null);
+		db.setAttribute(element, "[%=r.correspondence.name%]", null);
 	}
 	
 	public [%=r.type.name%] Find[%=r.name%]([%=r.type.fields[0].type%] [%=r.type.fields[0].name.toLowerCase()%]) {
@@ -145,14 +145,14 @@ public class [%=e.name%]{
 	[%for (f in e.fields) { %]
 	public [%=f.type%] get[%=f.name.ftuc()%]() {
 		[%if(f.type= "int"){%]
-		return Integer.parseInt(db.get(this,"[%=f.name%]"));
+		return Integer.parseInt(db.getAttribute(this,"[%=f.name%]"));
 		[%}if(f.type= "double"){%]
-		return Double.valueOf(db.get(this,"[%=f.name%]"));
+		return Double.valueOf(db.getAttribute(this,"[%=f.name%]"));
 		[%}if(f.type= "String"){%]
-		return db.get(this,"[%=f.name%]");
+		return db.getAttribute(this,"[%=f.name%]");
 		[%}if(f.type= "Date"){%]
 		Date date = null;    
-		String str = db.get(this,"[%=f.name%]");
+		String str = db.getAttribute(this,"[%=f.name%]");
 		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");      
 		try {    
            date = format1.parse(str);   
@@ -164,7 +164,7 @@ public class [%=e.name%]{
 	}
 	
 	public void set[%=f.name.ftuc()%]([%=f.type%] [%=f.name%]) {
-		db.set(this,"[%=f.name%]",[%=f.name%]);
+		db.setAttribute(this,"[%=f.name%]",[%=f.name%]);
 	}
 	
 	[%}%]

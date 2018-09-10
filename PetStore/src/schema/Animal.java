@@ -54,11 +54,11 @@ public class Animal{
 		return null;
 	}	
 
-	public double getAnimalOrderCost(AnimalOrder animalorder) {
+	public double getAnimalsCost(AnimalOrder animalorder) {
 		return Double.valueOf(db.getAnimals(this,animalorder.getDatabaseID(),"cost"));
 	}
 	
-	public void setAnimalOrderCost(AnimalOrder animalorder, double cost) {
+	public void setAnimalsCost(AnimalOrder animalorder, double cost) {
 		db.setAnimals(this,animalorder.getDatabaseID(),"cost",cost);
 		db.setAnimalOrderItem(animalorder,id,"cost",cost);
 	}
@@ -91,11 +91,11 @@ public class Animal{
 		return null;
 	}	
 
-	public double getSalePrice(Sale sale) {
+	public double getAnimalsalePrice(Sale sale) {
 		return Double.valueOf(db.getAnimalsale(this,sale.getDatabaseID(),"Price"));
 	}
 	
-	public void setSalePrice(Sale sale, double Price) {
+	public void setAnimalsalePrice(Sale sale, double Price) {
 		db.setAnimalsale(this,sale.getDatabaseID(),"Price",Price);
 		db.setSaleAnimal(sale,id,"Price",Price);
 	}

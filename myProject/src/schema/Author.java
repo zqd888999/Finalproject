@@ -30,13 +30,13 @@ public class Author{
 	
 	public void setPost(Post element){
 		if(this.getPost()==null) {
-			db.set(this, "post", element.getDatabaseID());
+			db.setAttribute(this, "post", element.getDatabaseID());
 			element.setAuthor(this);
 		}
 		else{
 			if(this.getPost().getDatabaseID()!=element.getDatabaseID()) {
-				db.set(this.getPost(), "Author", null);
-				db.set(this, "post", element.getDatabaseID());
+				db.setAttribute(this.getPost(), "Author", null);
+				db.setAttribute(this, "post", element.getDatabaseID());
 				element.setAuthor(this);
 			}
 		}
@@ -71,28 +71,28 @@ public class Author{
 		return null;
 	}	
 
-	public int getFanYear(Fan fan) {
+	public int getfansYear(Fan fan) {
 		return Integer.parseInt(db.getFans(this,fan.getDatabaseID(),"year"));
 	}
 	
-	public void setFanYear(Fan fan, int year) {
+	public void setfansYear(Fan fan, int year) {
 		db.setFans(this,fan.getDatabaseID(),"year",year);
 		db.setIdols(fan,id,"year",year);
 	}
 	public String getName() {
-		return db.get(this,"name");
+		return db.getAttribute(this,"name");
 	}
 	
 	public void setName(String name) {
-		db.set(this,"name",name);
+		db.setAttribute(this,"name",name);
 	}
 	
 	public int getAge() {
-		return Integer.parseInt(db.get(this,"age"));
+		return Integer.parseInt(db.getAttribute(this,"age"));
 	}
 	
 	public void setAge(int age) {
-		db.set(this,"age",age);
+		db.setAttribute(this,"age",age);
 	}
 	
 }	

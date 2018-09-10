@@ -38,7 +38,7 @@ public class Post{
 	}
 	
 	public void deleteComments(Comment element){
-		db.set(element, "post", null);
+		db.setAttribute(element, "post", null);
 	}
 	
 	public Comment Findcomments(String title) {
@@ -55,40 +55,40 @@ public class Post{
 	
 	public void setAuthor(Author element){
 		if(this.getAuthor()==null) {
-			db.set(this, "author", element.getDatabaseID());
+			db.setAttribute(this, "author", element.getDatabaseID());
 			element.setPost(this);
 		}
 		else{
 			if(this.getAuthor().getDatabaseID()!=element.getDatabaseID()) {
-				db.set(this.getAuthor(), "Post", null);
-				db.set(this, "author", element.getDatabaseID());
+				db.setAttribute(this.getAuthor(), "Post", null);
+				db.setAttribute(this, "author", element.getDatabaseID());
 				element.setPost(this);
 			}
 		}
 	}
 	
 	public String getTitle() {
-		return db.get(this,"Title");
+		return db.getAttribute(this,"Title");
 	}
 	
 	public void setTitle(String Title) {
-		db.set(this,"Title",Title);
+		db.setAttribute(this,"Title",Title);
 	}
 	
 	public int getPage() {
-		return Integer.parseInt(db.get(this,"Page"));
+		return Integer.parseInt(db.getAttribute(this,"Page"));
 	}
 	
 	public void setPage(int Page) {
-		db.set(this,"Page",Page);
+		db.setAttribute(this,"Page",Page);
 	}
 	
 	public double getPrice() {
-		return Double.valueOf(db.get(this,"Price"));
+		return Double.valueOf(db.getAttribute(this,"Price"));
 	}
 	
 	public void setPrice(double Price) {
-		db.set(this,"Price",Price);
+		db.setAttribute(this,"Price",Price);
 	}
 	
 }	

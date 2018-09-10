@@ -53,30 +53,14 @@ public class Sale{
 		return null;
 	}	
 
-	public double getAnimalPrice(Animal animal) {
+	public double getSaleAnimalPrice(Animal animal) {
 		return Double.valueOf(db.getSaleAnimal(this,animal.getDatabaseID(),"Price"));
 	}
 	
-	public void setAnimalPrice(Animal animal, double Price) {
+	public void setSaleAnimalPrice(Animal animal, double Price) {
 		db.setSaleAnimal(this,animal.getDatabaseID(),"Price",Price);
 		db.setAnimalsale(animal,id,"Price",Price);
 	}
-	public Customer getCustomerSale(){
-		return db.getCustomerSale(this);
-	}
-	
-	public void setCustomerSale(Customer element){
-		db.set(this, "CustomerSale", element.getDatabaseID());
-	}
-	
-	public Employee getEmployeeSale(){
-		return db.getEmployeeSale(this);
-	}
-	
-	public void setEmployeeSale(Employee element){
-		db.set(this, "EmployeeSale", element.getDatabaseID());
-	}
-	
 	public void addSaleItem(Merchandise element){
 		boolean exist = false;
 		for(Merchandise member: getSaleItem())
@@ -106,22 +90,38 @@ public class Sale{
 		return null;
 	}	
 
-	public String getMerchandiseQuantity(Merchandise merchandise) {
+	public String getSaleItemQuantity(Merchandise merchandise) {
 		return db.getSaleItem(this,merchandise.getDatabaseID(),"Quantity");
 	}
 	
-	public void setMerchandiseQuantity(Merchandise merchandise, String Quantity) {
+	public void setSaleItemQuantity(Merchandise merchandise, String Quantity) {
 		db.setSaleItem(this,merchandise.getDatabaseID(),"Quantity",Quantity);
 		db.setItems(merchandise,id,"Quantity",Quantity);
 	}
-	public double getMerchandisePrice(Merchandise merchandise) {
+	public double getSaleItemPrice(Merchandise merchandise) {
 		return Double.valueOf(db.getSaleItem(this,merchandise.getDatabaseID(),"Price"));
 	}
 	
-	public void setMerchandisePrice(Merchandise merchandise, double Price) {
+	public void setSaleItemPrice(Merchandise merchandise, double Price) {
 		db.setSaleItem(this,merchandise.getDatabaseID(),"Price",Price);
 		db.setItems(merchandise,id,"Price",Price);
 	}
+	public Customer getCustomerSale(){
+		return db.getCustomerSale(this);
+	}
+	
+	public void setCustomerSale(Customer element){
+		db.set(this, "CustomerSale", element.getDatabaseID());
+	}
+	
+	public Employee getEmployeeSale(){
+		return db.getEmployeeSale(this);
+	}
+	
+	public void setEmployeeSale(Employee element){
+		db.set(this, "EmployeeSale", element.getDatabaseID());
+	}
+	
 	public String getSaleID() {
 		return db.get(this,"SaleID");
 	}

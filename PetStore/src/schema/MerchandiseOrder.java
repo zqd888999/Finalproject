@@ -69,19 +69,19 @@ public class MerchandiseOrder{
 		return null;
 	}	
 
-	public String getMerchandiseQuantity(Merchandise merchandise) {
+	public String getOrderItemQuantity(Merchandise merchandise) {
 		return db.getOrderItem(this,merchandise.getDatabaseID(),"Quantity");
 	}
 	
-	public void setMerchandiseQuantity(Merchandise merchandise, String Quantity) {
+	public void setOrderItemQuantity(Merchandise merchandise, String Quantity) {
 		db.setOrderItem(this,merchandise.getDatabaseID(),"Quantity",Quantity);
 		db.setMerchandiseOrder(merchandise,id,"Quantity",Quantity);
 	}
-	public double getMerchandisePrice(Merchandise merchandise) {
+	public double getOrderItemPrice(Merchandise merchandise) {
 		return Double.valueOf(db.getOrderItem(this,merchandise.getDatabaseID(),"Price"));
 	}
 	
-	public void setMerchandisePrice(Merchandise merchandise, double Price) {
+	public void setOrderItemPrice(Merchandise merchandise, double Price) {
 		db.setOrderItem(this,merchandise.getDatabaseID(),"Price",Price);
 		db.setMerchandiseOrder(merchandise,id,"Price",Price);
 	}

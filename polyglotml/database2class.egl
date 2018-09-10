@@ -165,7 +165,7 @@ public class PolyglotDatabase {
 		return null;
 	}
 	
-	public void set([%=e.name%] [%=e.name.toLowerCase()%], String name, Object value) {
+	public void setAttribute([%=e.name%] [%=e.name.toLowerCase()%], String name, Object value) {
 		if(value ==null)
 			mysql_[%=e.database.name%].runSQL("UPDATE [%=e.name%] SET "+name+" = null WHERE databaseid = "+[%=e.name.toLowerCase()%].getDatabaseID());
 		else {
@@ -180,7 +180,7 @@ public class PolyglotDatabase {
 		}
 	}
 	
-	public String get([%=e.name%] [%=e.name.toLowerCase()%], String name) {
+	public String getAttribute([%=e.name%] [%=e.name.toLowerCase()%], String name) {
 		ResultSet rs =mysql_[%=e.database.name%].findTable("[%=e.name%]");
 		try {
 			while(rs.next())
@@ -211,12 +211,12 @@ public class PolyglotDatabase {
 		return [%=e.name.toLowerCase()%];
 	}
 	
-	public void set([%=e.name%] [%=e.name.toLowerCase()%], String name, Object value) {
+	public void setAttribute([%=e.name%] [%=e.name.toLowerCase()%], String name, Object value) {
 		MongoCollection<Document> [%=e.name.toLowerCase()%]s = mongo_[%=e.database.name%].getCollection("[%=e.name%]");
 		[%=e.name.toLowerCase()%]s.updateOne(Filters.eq("databaseid", [%=e.name.toLowerCase()%].getDatabaseID()), new Document("$set",new Document(name,value)));	
 	}
 	
-	public String get([%=e.name%] [%=e.name.toLowerCase()%], String name) {
+	public String getAttribute([%=e.name%] [%=e.name.toLowerCase()%], String name) {
 		MongoCollection<Document> [%=e.name.toLowerCase()%]s = mongo_[%=e.database.name%].getCollection("[%=e.name%]");
 		FindIterable<Document> documents = [%=e.name.toLowerCase()%]s.find();
 		for (Document document : documents) {
@@ -475,10 +475,10 @@ public class PolyglotDatabase {
 		if([%=e.name.toLowerCase()%]!=null){
 		[%for(r in e.references){
 		if(r.many = false and r.correspondence.many = false){%]
-			set([%=e.name.toLowerCase()%].get[%=r.name.ftuc()%](), "[%=r.correspondence.name%]", null);
+			setAttribute([%=e.name.toLowerCase()%].get[%=r.name.ftuc()%](), "[%=r.correspondence.name%]", null);
 		[%}if(r.many and r.correspondence.many = false){%]
 			for([%=r.type.name%] element : [%=e.name.toLowerCase()%].get[%=r.name.ftuc()%]()){
-				set(element, "[%=r.correspondence.name%]", null);
+				setAttribute(element, "[%=r.correspondence.name%]", null);
 			}
 		[%}if(r.many = true and r.correspondence.many = true){
 		if(e.database.databasetype.value=0){%]

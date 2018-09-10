@@ -46,7 +46,7 @@ public class PetStoreTest {
 		ao.setOrderDate(myDate1);
 		ao.setReceiveDate(myDate2);
 		a.addAnimals(ao);
-		a.setAnimalOrderCost(ao, 1.2);
+		a.setAnimalsCost(ao, 1.2);
 		m = db.createMerchandise();
 		m.setItemID("adasfasf");
 		m.setDescription("this is hat");
@@ -54,8 +54,8 @@ public class PetStoreTest {
 		sale.setSaleID("asdaf");
 		sale.setSaleDate(myDate2);
 		sale.addSaleItem(m);
-		sale.setMerchandisePrice(m, 1.2);
-		m.setSaleQuantity(sale, "good");
+		sale.setSaleItemPrice(m, 1.2);
+		m.setItemsQuantity(sale, "good");
 	}
 	
 	@After
@@ -74,9 +74,9 @@ public class PetStoreTest {
 		assertEquals(myDate1, ao.getOrderDate());
 		Date myDate2 = dateFormat1.parse("2018-08-24");
 		assertEquals(myDate2, ao.getReceiveDate());
-		assertEquals(1.2,ao.getAnimalCost(a),1e-5);
-		assertEquals(1.2,m.getSalePrice(sale),1e-5);
-		assertEquals("good", sale.getMerchandiseQuantity(m));
+		assertEquals(1.2,ao.getAnimalOrderItemCost(a),1e-5);
+		assertEquals(1.2,m.getItemsPrice(sale),1e-5);
+		assertEquals("good", sale.getSaleItemQuantity(m));
 		assertEquals(1.1,db.findAnimalOrderByPoNumber(111).getCost(),1e-5);
 
 	}

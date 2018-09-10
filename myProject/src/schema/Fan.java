@@ -53,28 +53,28 @@ public class Fan{
 		return null;
 	}	
 
-	public int getAuthorYear(Author author) {
+	public int getidolsYear(Author author) {
 		return Integer.parseInt(db.getIdols(this,author.getDatabaseID(),"year"));
 	}
 	
-	public void setAuthorYear(Author author, int year) {
+	public void setidolsYear(Author author, int year) {
 		db.setIdols(this,author.getDatabaseID(),"year",year);
 		db.setFans(author,id,"year",year);
 	}
 	public String getName() {
-		return db.get(this,"name");
+		return db.getAttribute(this,"name");
 	}
 	
 	public void setName(String name) {
-		db.set(this,"name",name);
+		db.setAttribute(this,"name",name);
 	}
 	
 	public int getAge() {
-		return Integer.parseInt(db.get(this,"age"));
+		return Integer.parseInt(db.getAttribute(this,"age"));
 	}
 	
 	public void setAge(int age) {
-		db.set(this,"age",age);
+		db.setAttribute(this,"age",age);
 	}
 	
 }	

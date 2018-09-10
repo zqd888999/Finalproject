@@ -1040,6 +1040,20 @@ public class PolyglotDatabase {
 		return animals;
 	}
 	
+	public ArrayList<Merchandise> getSaleItem(Sale element) {
+		ArrayList<Merchandise> merchandises = new ArrayList<Merchandise>();
+		MongoCollection<Document> table = mongo_newtest.getCollection("SaleItem_Sale");
+		FindIterable<Document> documents = table.find();
+		for (Document document : documents) { 
+		   	if(document.getInteger("Items")==element.getDatabaseID()) {
+		    	Merchandise merchandise = new Merchandise(this);
+		    	merchandise.setDatabaseID(document.getInteger("SaleItem"));
+		    	merchandises.add(merchandise);
+		   	} 
+		}
+		return merchandises;
+	}
+	
 	public Customer getCustomerSale(Sale element) {
 		MongoCollection<Document> table = mongo_newtest.getCollection("Sale");
 		FindIterable<Document> documents = table.find();
@@ -1068,20 +1082,6 @@ public class PolyglotDatabase {
 		    }
 		}
 		return null;
-	}
-	
-	public ArrayList<Merchandise> getSaleItem(Sale element) {
-		ArrayList<Merchandise> merchandises = new ArrayList<Merchandise>();
-		MongoCollection<Document> table = mongo_newtest.getCollection("SaleItem_Sale");
-		FindIterable<Document> documents = table.find();
-		for (Document document : documents) { 
-		   	if(document.getInteger("Items")==element.getDatabaseID()) {
-		    	Merchandise merchandise = new Merchandise(this);
-		    	merchandise.setDatabaseID(document.getInteger("SaleItem"));
-		    	merchandises.add(merchandise);
-		   	} 
-		}
-		return merchandises;
 	}
 	
 	public ArrayList<Sale> getItems(Merchandise element) {

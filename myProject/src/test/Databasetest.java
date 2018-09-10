@@ -144,11 +144,11 @@ public class Databasetest {
 		a.addFans(f1);
 		f.addIdols(a);
 		f.addIdols(a1);
-		f.setAuthorYear(a, 3);
-		a.setFanYear(f1, 2);
-		assertEquals(3,f.getAuthorYear(a));
-		assertEquals(3,a.getFanYear(f));
-		assertEquals(2,a.getFanYear(f1));
+		f.setidolsYear(a, 3);
+		a.setfansYear(f1, 2);
+		assertEquals(3,f.getidolsYear(a));
+		assertEquals(3,a.getfansYear(f));
+		assertEquals(2,a.getfansYear(f1));
 		assertEquals(2,a.getFans().size());
 		assertEquals(2,f.getIdols().size());
 		assertEquals("jack",a.Findfans("jack").getName());
@@ -172,7 +172,7 @@ public class Databasetest {
 		p.setAuthor(a1);
 		assertEquals("frank", p.getAuthor().getName());
 		assertEquals("i am ok", a1.getPost().getTitle());
-		assertEquals(null,db.get(a, "post"));
+		assertEquals(null,db.getAttribute(a, "post"));
 		a.setPost(p);
 		assertEquals("dong", p.getAuthor().getName());
 		assertEquals("i am ok", a.getPost().getTitle());

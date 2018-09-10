@@ -69,11 +69,11 @@ public class AnimalOrder{
 		return null;
 	}	
 
-	public double getAnimalCost(Animal animal) {
+	public double getAnimalOrderItemCost(Animal animal) {
 		return Double.valueOf(db.getAnimalOrderItem(this,animal.getDatabaseID(),"cost"));
 	}
 	
-	public void setAnimalCost(Animal animal, double cost) {
+	public void setAnimalOrderItemCost(Animal animal, double cost) {
 		db.setAnimalOrderItem(this,animal.getDatabaseID(),"cost",cost);
 		db.setAnimals(animal,id,"cost",cost);
 	}
